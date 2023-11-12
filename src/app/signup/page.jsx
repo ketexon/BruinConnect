@@ -1,9 +1,12 @@
 "use client";
 import * as React from "react";
 import Box from "@mui/material/Box";
-import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField"
+import Typography from "@mui/material/Typography";
+import Container from "~/components/Container";
+import Stack from "@mui/material/Stack";
+
 import { redirect, useParams } from "next/navigation";
 import { NextResponse } from "next/server";
 
@@ -42,15 +45,15 @@ export default function Signup(){
 		}
 	}
 
-	return <Container maxWidth="sm">
-		<Box component="form" method="POST" action="/api/signup"
-			sx={{
-				display: "flex",
-				flexDirection: "column",
-				gap: 1
-			}}
-		>
-			<TextField variant="outlined" required
+	return <Container
+		sx={{ py: 2 }}
+		component="form"
+		method="POST"
+		action="/api/signup"
+	>
+		<Typography variant="h1" mb={4}>Sign Up</Typography>
+		<Stack direction="column" gap={2}>
+		<TextField variant="outlined" required
 				id="email" name="email" type="email"
 				label="UCLA Email"
 				inputProps={{
@@ -73,7 +76,11 @@ export default function Signup(){
 					onInput: onRepasswordInput
 				}}
 			/>
-			<Button type="submit" variant="contained">Submit</Button>
-		</Box>
+			<Button
+				type="submit"
+				variant="contained"
+				sx={{ alignSelf: "flex-start" }}
+			>Submit</Button>
+		</Stack>
 	</Container>
 }

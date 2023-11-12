@@ -1,24 +1,29 @@
 "use client";
 import * as React from "react";
 import Box from "@mui/material/Box";
-import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField"
 import { redirect, useParams } from "next/navigation";
+import Typography from "@mui/material/Typography";
+import Container from "~/components/Container";
+import Stack from "@mui/material/Stack";
+import { redirect } from "next/navigation";
+
 import { NextResponse } from "next/server";
+import Link from "~/components/Link";
 
 export default function Login(){
 	const params = useParams();
 	const error = params.error;
 
-	return <Container maxWidth="sm">
-		<Box component="form" method="POST" action="/api/login"
-			sx={{
-				display: "flex",
-				flexDirection: "column",
-				gap: 1
-			}}
-		>
+	return <Container
+		sx={{ py: 2 }}
+		component="form"
+		method="POST"
+		action="/api/login"
+	>
+		<Typography variant="h1" mb={4}>Login</Typography>
+		<Stack direction="column" gap={2}>
 			<TextField variant="outlined" required
 				id="email" name="email" type="email"
 				label="UCLA Email"
@@ -30,7 +35,15 @@ export default function Login(){
 					minLength: 6,
 				}}
 			/>
-			<Button type="submit" variant="contained">Submit</Button>
-		</Box>
+			<Button
+				type="submit"
+				variant="contained"
+				sx={{ alignSelf: "flex-start" }}
+			>Submit</Button>
+			<Stack direction="column" alignItems="flex-start">
+				<Link href="/signup">Sign up</Link>
+				<Link href="/reset-password">Reset password</Link>
+			</Stack>
+		</Stack>
 	</Container>
 }

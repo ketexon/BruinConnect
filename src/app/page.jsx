@@ -1,8 +1,8 @@
 /** @type {import("next").Metadata} */
 export const metadata = {
-	title: 'BruinConnect | Home Page',
+	title: "BruinConnect",
 }
 
-export default function Index(){
-	return <div>Hello</div>
+export default function Home(){
+
 }
