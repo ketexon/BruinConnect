@@ -1,18 +1,18 @@
 "use client";
 
 import { Button, ButtonGroup, Box, Grid, Typography, Stack } from '@mui/material';
-import { spacing } from '@mui/system';
 import FastForwardIcon from '@mui/icons-material/FastForward';
 import { useState, useEffect, useRef } from 'react';
 import '@fontsource/roboto/300.css';
+
 
 const QUESTIONS = ['Question 1', 'Question 2', 'Question 3', 'Question 4'];
 
 
 function QuestionText({ text }) {
 	return (
-		<Typography component="div" sx={{ mt: 20, mb: 40 }}>
-			<Box sx={{ textAlign: 'center', fontSize: 32 }}>{text}</Box>
+		<Typography component="div" sx={{ mx: 4, mt: 15 }}>
+			<Box sx={{ textAlign: 'center', fontSize: 30, minHeight: 150 }}>{text}</Box>
 		</Typography>
 	)
 }
@@ -21,17 +21,21 @@ function QuestionText({ text }) {
 function ButtonGrid({ onButtonClick }) {
 	const grid = [];
 	for (let i = 1; i <= 6; i++)
-		grid.push(<Button onClick={() => onButtonClick(i)} size="large" variant="contained"><Typography variant="h5">{i}</Typography></Button>);
+		grid.push(
+			<Button onClick={() => onButtonClick(i)} size="large" variant="contained">
+				  <Typography variant="h5">{i}</Typography>
+			</Button>
+		);
 
 	return (
 		<Box sx={{
 			display: 'flex',
 			flexDirection: 'column',
 			alignItems: 'center',
+			mt: 35,
 			'& > *': {
 				m: 1,
-			},
-			mt: 20
+			}
 		}} >
 			<ButtonGroup className="buttonGroup">
 				{grid}
@@ -48,7 +52,7 @@ export default function Questions() {
 	const numAnswered = useRef(0); // Number of questions the user has answered
 
 	// Change question
-	const changeQuestionNum = (seen) => {
+	const changeQuestionNum = seen => {
 
 		// Find a random unanswered question
 		let index;
@@ -64,7 +68,7 @@ export default function Questions() {
 	useEffect(() => changeQuestionNum(answers), []);
 
 	// Store answer and change question
-	const handleButtonClick = (i) => {
+	const handleButtonClick = i => {
 
 		// return if all questions answered
 		if (numAnswered.current == QUESTIONS.length)
@@ -96,7 +100,7 @@ export default function Questions() {
 			</Stack>
 
 			<Grid container justifyContent="flex-end">
-				<Button variant="text" endIcon={<FastForwardIcon />} sx={{ mx: 5, mt: 5, py: 1.5 }} size="large" onClick={() => handleButtonClick(-1)}>
+				<Button variant="text" endIcon={<FastForwardIcon />} sx={{ mx: 5, mt: 8, py: 1.5 }} size="large" onClick={() => handleButtonClick(-1)}>
 					<Typography variant='h5'>SKIP</Typography>
 				</Button>
 			</Grid>
