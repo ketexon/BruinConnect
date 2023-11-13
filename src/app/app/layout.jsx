@@ -1,15 +1,22 @@
-import ThemeRegistry from "~/styles/ThemeRegistry"
+import "server-only";
+
 import Nav from "./components/Nav"
+import { redirect } from "next/navigation";
+import getUser from "~/auth/getUser";
 
 export const metadata = {
-  title: 'BruinConnect',
+    title: 'BruinConnect',
 }
 
-export default function AppLayout({ children }) {
- return (
-    <>
-      <Nav/>
-      {children}
-    </>
-  )
+export default async function AppLayout({ children }) {
+    const user = getUser();
+    if (user === null) {
+        redirect("/login");
+    }
+    return (
+        <>
+            <Nav />
+            {children}
+        </>
+    )
 }

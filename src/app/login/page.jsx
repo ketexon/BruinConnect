@@ -7,7 +7,6 @@ import { redirect, useParams } from "next/navigation";
 import Typography from "@mui/material/Typography";
 import Container from "~/components/Container";
 import Stack from "@mui/material/Stack";
-import { redirect } from "next/navigation";
 
 import { NextResponse } from "next/server";
 import Link from "~/components/Link";
