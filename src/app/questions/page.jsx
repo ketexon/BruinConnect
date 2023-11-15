@@ -2,11 +2,14 @@
 
 import { Button, ButtonGroup, Box, Grid, Typography, Stack } from '@mui/material';
 import FastForwardIcon from '@mui/icons-material/FastForward';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import '@fontsource/roboto/300.css';
 
 
-const QUESTIONS = ['Question 1', 'Question 2', 'Question 3', 'Question 4'];
+import { createClient } from '@supabase/supabase-js'
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+const supabase = createClient(supabaseUrl, supabaseKey)
 
 
 function QuestionText({ text }) {
@@ -22,7 +25,7 @@ function ButtonGrid({ onButtonClick }) {
 	const grid = [];
 	for (let i = 1; i <= 6; i++)
 		grid.push(
-			<Button onClick={() => onButtonClick(i)} size="large" variant="contained">
+			<Button key={i} onClick={() => onButtonClick(i)} size="large" variant="contained">
 				  <Typography variant="h5">{i}</Typography>
 			</Button>
 		);
@@ -47,50 +50,92 @@ function ButtonGrid({ onButtonClick }) {
 
 export default function Questions() {
 
-	const [questionNum, setQuestionNum] = useState(); // Current question shown on screen
-	const [answers, setAnswers] = useState(Array(QUESTIONS.length).fill(null)); // Stores answers to questions. null = not answered, -1 = skipped
-	const numAnswered = useRef(0); // Number of questions the user has answered
+	const [questions, setQuestions] = useState({});
+	const [currQuestionId, setCurrQuestionId] = useState(-1);
+
+	const user_id = '6667b1a7-8838-4632-8d93-def5f68df317'; // TODO: GET USER ID FROM AUTH
+
+
+	// Initialize questions. Use useEffect so it runs on initialization
+	useEffect(() => {
+
+		const fetchData = async () => {
+			try {
+				// Get all questions
+				let all_questions = await supabase.from('Questions')
+					.select(`
+						*,
+						Responses(user_id)
+					`); //.neq('Responses.user_id', user_id);
+
+				// Create a dict of question_id: question_text
+				let unanswered_questions = Object.fromEntries(
+					all_questions.data
+						// filter out questions that have a response from the user
+						.filter(
+							question => question.Responses.every(
+								response => response.user_id != user_id
+							)
+						// format
+						).map(
+							question => [question.question_id, question.question_text]
+						)
+				);
+
+				console.log(unanswered_questions);
+				setQuestions(unanswered_questions);
+
+			} catch (error) {
+				console.log(error);
+			}
+		};
+		
+		fetchData();
+	}, []);
+
 
 	// Change question
-	const changeQuestionNum = seen => {
+	const changeQuestionNum = () => {
+		if (!questions) return; // Don't run on initialization
 
 		// Find a random unanswered question
-		let index;
-		do { index = Math.floor(Math.random() * QUESTIONS.length) }
-		while (seen[index] != null);
+		let keys = Object.keys(questions)
+		let question_id = keys[Math.floor(Math.random() * keys.length)]
 		
 		// Change the question shown on screen
-		setQuestionNum(index);
+		setCurrQuestionId(question_id);
 	};
 
 	// React magic so it doesn't render differently on client and server
-	// Also gets called on initialization
-	useEffect(() => changeQuestionNum(answers), []);
+	useEffect(changeQuestionNum, [questions]);
+
 
 	// Store answer and change question
-	const handleButtonClick = i => {
+	const handleButtonClick = async i => {
 
-		// return if all questions answered
-		if (numAnswered.current == QUESTIONS.length)
+		// return if questions not loaded yet or all questions answered
+		if (Object.keys(questions).length === 0)
 			return;
 
-		// store answer
-		const newAnswers = answers.slice()
-		newAnswers[questionNum] = i;
-		setAnswers(newAnswers);
+		// insert answer into Responses table
+		try {
+			const { error } = await supabase
+				.from('Responses')
+				.insert({ question_id: currQuestionId, user_id: user_id, response: i });
+		} catch (error) {
+			console.log(error);
+		}
 
-		// Either show the next question or display that there are none left
-		numAnswered.current++;
-		if (numAnswered.current < QUESTIONS.length)
-			changeQuestionNum(newAnswers);
-		else
-			setQuestionNum(-1); // -1 singals to render "You've Answered All Questions!"
+		// update questions
+		const newQuestions = { ...questions };
+		delete newQuestions[currQuestionId];
+		setQuestions(newQuestions);
 	};
 
 
 	return (
 		<>
-			<QuestionText text={questionNum != -1 ? QUESTIONS[questionNum] : "You've Answered All Questions!"}/>
+			<QuestionText text={Object.keys(questions).length !== 0 ? questions[currQuestionId] : "You've Answered All Questions!"}/>
 
 			<ButtonGrid onButtonClick={handleButtonClick}/>
 
@@ -100,7 +145,8 @@ export default function Questions() {
 			</Stack>
 
 			<Grid container justifyContent="flex-end">
-				<Button variant="text" endIcon={<FastForwardIcon />} sx={{ mx: 5, mt: 8, py: 1.5 }} size="large" onClick={() => handleButtonClick(-1)}>
+				<Button variant="text" endIcon={<FastForwardIcon />} sx={{ mx: 5, mt: 8, py: 1.5 }} size="large"
+						onClick={() => handleButtonClick(null)}>
 					<Typography variant='h5'>SKIP</Typography>
 				</Button>
 			</Grid>
