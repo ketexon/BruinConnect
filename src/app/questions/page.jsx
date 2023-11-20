@@ -61,6 +61,7 @@ export default function Questions() {
 
 		const fetchData = async () => {
 			try {
+
 				// Get all questions
 				let all_questions = await supabase.from('Questions')
 					.select(`
