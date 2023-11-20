@@ -7,7 +7,6 @@ import createServerClient from "~/auth/createServerClient";
 
 export default async function Swipe(){
 	const user = await getUser();
-	console.log(user);
 
 	return <Container>
 		<Typography variant="body1">Email: {user.auth.email}</Typography>
