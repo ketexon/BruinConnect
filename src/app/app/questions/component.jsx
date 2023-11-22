@@ -5,7 +5,6 @@ import FastForwardIcon from '@mui/icons-material/FastForward';
 import { useState, useEffect } from 'react';
 import '@fontsource/roboto/300.css';
 
-
 import { createClient } from '@supabase/supabase-js'
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
@@ -48,12 +47,10 @@ function ButtonGrid({ onButtonClick }) {
 }
 
 
-export default function Questions() {
+export default function ({ user_id }) {
 
 	const [questions, setQuestions] = useState({});
 	const [currQuestionId, setCurrQuestionId] = useState(-1);
-
-	const user_id = '6667b1a7-8838-4632-8d93-def5f68df317'; // TODO: GET USER ID FROM AUTH
 
 
 	// Initialize questions. Use useEffect so it runs on initialization
@@ -61,7 +58,6 @@ export default function Questions() {
 
 		const fetchData = async () => {
 			try {
-
 				// Get all questions
 				let all_questions = await supabase.from('Questions')
 					.select(`
@@ -83,7 +79,6 @@ export default function Questions() {
 						)
 				);
 
-				console.log(unanswered_questions);
 				setQuestions(unanswered_questions);
 
 			} catch (error) {
