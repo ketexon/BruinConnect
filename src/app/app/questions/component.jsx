@@ -2,13 +2,16 @@
 
 import { Button, ButtonGroup, Box, Grid, Typography, Stack } from '@mui/material';
 import FastForwardIcon from '@mui/icons-material/FastForward';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import '@fontsource/roboto/300.css';
 
 import { createClient } from '@supabase/supabase-js'
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 const supabase = createClient(supabaseUrl, supabaseKey)
+
+import { SwitchTransition, CSSTransition } from "react-transition-group";
+import "./styles.css"
 
 
 function QuestionText({ text }) {
@@ -51,19 +54,31 @@ export default function ({ user_id }) {
 
 	const [questions, setQuestions] = useState({});
 	const [currQuestionId, setCurrQuestionId] = useState(-1);
+	const [allQuestionsAnswered, setAllQuestionsAnswered] = useState(false);
+	const initialRender = useRef(true);
+	
+	// Two refs are used, with each one representing a different copy of the
+	// window during the transition. The two take turns being the "active" window.
+	// Here, we use separate state variables to track the text in each one.
+
+	const [refOneIsActive, setRefOneIsActive] = useState(true);
+	const refOne = useRef(null);
+	const refTwo = useRef(null);
+	const nodeRef = refOneIsActive ? refOne : refTwo;
+
+	const [refOneQuestion, setRefOneQuestion] = useState("");
+	const [refTwoQuestion, setRefTwoQuestion] = useState("");
 
 
 	// Initialize questions. Use useEffect so it runs on initialization
 	useEffect(() => {
-
 		const fetchData = async () => {
 			try {
-				// Get all questions
-				let all_questions = await supabase.from('Questions')
-					.select(`
-						*,
-						Responses(user_id)
-					`); //.neq('Responses.user_id', user_id);
+				// Get all questions, joining with Responses table on user_id
+				let all_questions = await supabase.from('Questions').select(`
+					*,
+					Responses(user_id)
+				`);
 
 				// Create a dict of question_id: question_text
 				let unanswered_questions = Object.fromEntries(
@@ -79,7 +94,11 @@ export default function ({ user_id }) {
 						)
 				);
 
-				setQuestions(unanswered_questions);
+				// set questions
+				if (Object.keys(unanswered_questions).length === 0)
+					setAllQuestionsAnswered(true);
+				else
+					setQuestions(unanswered_questions);
 
 			} catch (error) {
 				console.log(error);
@@ -92,14 +111,35 @@ export default function ({ user_id }) {
 
 	// Change question
 	const changeQuestionNum = () => {
-		if (!questions) return; // Don't run on initialization
 
 		// Find a random unanswered question
 		let keys = Object.keys(questions)
 		let question_id = keys[Math.floor(Math.random() * keys.length)]
-		
-		// Change the question shown on screen
+
+		// set the next question
 		setCurrQuestionId(question_id);
+
+		let newQuestion;
+		if (allQuestionsAnswered)
+			newQuestion = "You've Answered All Questions!";
+		else if (Object.keys(questions).length === 0) // uninitialized
+			newQuestion = "";
+		else
+			newQuestion = questions[question_id];
+
+		// Don't play the animation on initial render
+		if (initialRender.current)
+			setRefOneQuestion(newQuestion);
+
+		// Change the question on the other ref and switch the active ref
+		else {
+			setRefOneIsActive((refOneIsActive) => {
+				if (refOneIsActive) setRefTwoQuestion(newQuestion);
+				else setRefOneQuestion(newQuestion);
+
+				return !refOneIsActive;
+			});
+		}
 	};
 
 	// React magic so it doesn't render differently on client and server
@@ -108,6 +148,7 @@ export default function ({ user_id }) {
 
 	// Store answer and change question
 	const handleButtonClick = async i => {
+		initialRender.current = false;
 
 		// return if questions not loaded yet or all questions answered
 		if (Object.keys(questions).length === 0)
@@ -125,27 +166,41 @@ export default function ({ user_id }) {
 		// update questions
 		const newQuestions = { ...questions };
 		delete newQuestions[currQuestionId];
+
 		setQuestions(newQuestions);
+		if (Object.keys(newQuestions).length === 0)
+			setAllQuestionsAnswered(true);
 	};
 
 
 	return (
-		<>
-			<QuestionText text={Object.keys(questions).length !== 0 ? questions[currQuestionId] : "You've Answered All Questions!"}/>
+        <SwitchTransition>
+			<CSSTransition
+				key={refOneIsActive}
+				nodeRef={nodeRef}
+				addEndListener={(done) => {
+					nodeRef.current.addEventListener("transitionend", done, false);
+				}}
+				classNames="fade"
+			>
+				<div ref={nodeRef}>
+					<QuestionText text={refOneIsActive ? refOneQuestion : refTwoQuestion}/>
 
-			<ButtonGrid onButtonClick={handleButtonClick}/>
+					<ButtonGrid onButtonClick={handleButtonClick}/>
 
-			<Stack direction="row" justifyContent="space-between" sx={{ mx: 4 }}>
-				<Typography>Strongly Disagree</Typography>
-				<Typography sx={{ textAlign: 'right' }}>Strongly Agree</Typography>
-			</Stack>
+					<Stack direction="row" justifyContent="space-between" sx={{ mx: 4 }}>
+						<Typography>Strongly Disagree</Typography>
+						<Typography sx={{ textAlign: 'right' }}>Strongly Agree</Typography>
+					</Stack>
 
-			<Grid container justifyContent="flex-end">
-				<Button variant="text" endIcon={<FastForwardIcon />} sx={{ mx: 5, mt: 8, py: 1.5 }} size="large"
-						onClick={() => handleButtonClick(null)}>
-					<Typography variant='h5'>SKIP</Typography>
-				</Button>
-			</Grid>
-		</>
-	)
+					<Grid container justifyContent="flex-end">
+						<Button variant="text" endIcon={<FastForwardIcon />} sx={{ mx: 5, mt: 8, py: 1.5 }}
+								size="large" onClick={() => handleButtonClick(null)}>
+							<Typography variant='h5'>SKIP</Typography>
+						</Button>
+					</Grid>
+				</div>
+			</CSSTransition>
+        </SwitchTransition>
+	);
 }
