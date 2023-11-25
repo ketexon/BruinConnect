@@ -24,6 +24,7 @@ const SwipePage = () => {
   const [startX, setStartX] = React.useState(0);
   const [endX, setEndX] = React.useState(0);
   const [value, setValue] = React.useState(1);
+  const [isDragging, setIsDragging] = React.useState(false);
   const user = 
     {
       //this information will be fetched
@@ -33,11 +34,28 @@ const SwipePage = () => {
     }
 
     const handleStart = (clientX) => {
-      setStartX(clientX); // store the x-coordinate when the swipe starts
+      setStartX(clientX);
+      setIsDragging(true);
     }
     
     const handleEnd = (clientX) => {
-      setEndX(clientX); // store the x-coordinate when the swipe ends
+      setEndX(clientX);
+      setIsDragging(false);
+    
+      const card = document.getElementById('swipe-card');
+      card.style.transform = `translateX(0px)`; // reset position
+    }
+
+    const handleMove = (clientX) => {
+      if(isDragging) {
+        const card = document.getElementById('swipe-card');
+        const moveDistance = clientX - startX;
+    
+        // here we're setting rotation angle in range from -15 to 15 degrees based on move distance.
+        const rotateAngle = Math.max(-15, Math.min(15, moveDistance / 13));
+    
+        card.style.transform = `translateX(${moveDistance}px) rotate(${rotateAngle}deg)`;
+      }
     }
 
     React.useEffect(() => {
@@ -53,13 +71,15 @@ const SwipePage = () => {
     <div className="center-div" 
       onTouchStart={(e) => handleStart(e.touches[0].clientX)} 
       onTouchEnd={(e) => handleEnd(e.changedTouches[0].clientX)}
+      onTouchMove={(e) => handleMove(e.touches[0].clientX)}
       onMouseDown={(e) => handleStart(e.clientX)}
       onMouseUp={(e) => handleEnd(e.clientX)}
-    >
+      onMouseMove={(e) => handleMove(e.clientX)}
+>
       <ThemeProvider theme={theme}>
       <CssBaseline />
       <div>
-      <Card sx={{ width: 345 }}>
+      <Card sx={{ width: 345 }} id="swipe-card">
         <CardMedia
           sx={{ height: 350 }}
           image={user.imageUrl}
@@ -94,10 +114,7 @@ const SwipePage = () => {
       </div>
       </ThemeProvider>
     </div>
-    
-  
   );
 }
-
 
 export default SwipePage;
