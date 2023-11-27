@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server'
 import createServerClient from '~/auth/createServerClient'
 
-
 /**
  *
  * @param {import("next/server").NextRequest} req
