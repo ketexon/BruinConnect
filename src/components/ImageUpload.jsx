@@ -81,7 +81,7 @@ export default function ImageUpload({ onFileUpload, onFileUploadError, buttonPro
 			onClose={onSnackbarClose}
 		>
 			<Alert severity="error" autoHideDuration={5000} onClose={onSnackbarClose}>
-				{snackbarMessage}
+				{snackbarMessage.toString()}
 			</Alert>
 		</Snackbar>
 	</>
