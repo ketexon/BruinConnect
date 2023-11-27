@@ -6,7 +6,8 @@ import getUser from "~/auth/getUser";
 import createServerClient from "~/auth/createServerClient";
 
 export default async function Swipe(){
-	const user = await getUser();
+	const supabase = createServerClient();
+	const user = await getUser(supabase);
 
 	return <Container>
 		<Typography variant="body1">Email: {user.auth.email}</Typography>
