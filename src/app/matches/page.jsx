@@ -44,7 +44,7 @@ export default function Matches() {
 
 function Profile(){
 	return (
-        <Card sx={{ maxWidth: 345 }}>
+        <Card sx={{ padding: 2 }}>
           <CardMedia
             sx={{ height: 140 }}
             image="C:\Users\benxi\Downloads\1695852588261.jpg"
