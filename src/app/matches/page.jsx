@@ -7,7 +7,7 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-
+import Avatar from '@mui/material/Avatar';
 
 
 export const metadata = {
@@ -44,10 +44,10 @@ export default function Matches() {
 
 function Profile(){
 	return (
-        <Card sx={{ padding: 2 }}>
+        <Card sx={{ padding: 4 }}>
           <CardMedia
             sx={{ height: 140 }}
-            image="C:\Users\benxi\Downloads\1695852588261.jpg"
+            image="./Person.jpg"
             title="Name"
           />
           <CardContent>
@@ -72,6 +72,11 @@ function Profile(){
           </CardContent>
           <CardActions>
             <Button size="small">View Profile</Button>
+          </CardActions>
+          <CardActions>
+          <Button>
+          <Avatar src={'./SnapChatLogo.png'} variant="square"/>
+          </Button>
           </CardActions>
         </Card>
       );
