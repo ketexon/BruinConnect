@@ -1,11 +1,21 @@
-import { NextResponse } from "next/server";
+import createServerClient from "~/auth/createServerClient"
 
 /**
  * @param {import("next/server").NextRequest} request
- * @returns {import("next/server").NextResponse}
+ * @returns {import("next/server").NextRequest}
  */
 export async function POST(request) {
-	const requestUrl = new URL(request.url);
 	const { origin } = request.nextUrl;
-	return Response.redirect(`${origin}/`);
+	const supabase = createServerClient();
+
+	const formData = await request.formData();
+	const email = formData.get("email");
+	const password = formData.get("password");
+
+	await supabase.auth.signInWithPassword({
+		email,
+		password,
+	})
+
+	return Response.redirect(`${origin}/`)
 }

@@ -2,19 +2,18 @@
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
-    "@material/image-list": "^14.0.0",
-    "@mui/icons-material": "^5.14.16",
-    "@mui/material": "^5.14.17",
-    "@mui/styled-engine-sc": "^6.0.0-alpha.5",
-    "@refinedev/cli": "^2.16.1",
-    "@refinedev/mui": "^5.13.17",
-    "@supabase/auth-helpers-nextjs": "^0.8.1",
+    "@fontsource/roboto": "^5.0.8",
+    "@mui/icons-material": "^5.14.18",
+    "@mui/material": "^5.14.18",
+    "@supabase/ssr": "^0.0.4",
     "@supabase/supabase-js": "^2.38.2",
+    "bootstrap": "^5.3.2",
     "next": "^13.5.6",
     "react": "^18.2.0",
+    "react-bootstrap": "^2.9.1",
     "react-dom": "^18.2.0",
-    "react-query": "^3.39.3",
-    "styled-components": "^6.1.1"
+    "react-transition-group": "^4.4.5",
+    "server-only": "^0.0.1"
   },
   "scripts": {
     "dev": "next dev",
