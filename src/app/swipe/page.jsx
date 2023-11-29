@@ -13,6 +13,11 @@ import BottomNavigationAction from '@mui/material/BottomNavigationAction';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 
+import { createClient } from '@supabase/supabase-js'
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+const supabase = createClient(supabaseUrl, supabaseKey)
+
 const theme = createTheme({
   palette: {
     mode: 'light',
@@ -25,13 +30,48 @@ const SwipePage = () => {
   const [endX, setEndX] = React.useState(0);
   const [value, setValue] = React.useState(1);
   const [isDragging, setIsDragging] = React.useState(false);
-  const user = 
-    {
-      //this information will be fetched
-      name: 'Dwayne Johnson',
-      imageUrl: 'https://m.media-amazon.com/images/M/MV5BOWU1ODBiNGUtMzVjNi00MzdhLTk0OTktOWRiOTIxMWNhOGI2XkEyXkFqcGdeQXVyMTU2OTM5NDQw._V1_FMjpg_UX1000_.jpg',
-      description: 'Many people know me as The Rock. I like working out and would like a partner to do some extra cardio with.'
-    }
+  const [userIndex, setUserIndex] = React.useState(0);
+  const [user, setUser] = React.useState(null);
+
+  React.useEffect(() => {
+    const fetchUserData = async () => {
+      const { data: Users, error } = await supabase
+        .from('Users')
+        .select('*');
+      
+      if (error) {
+        console.log('Failed to fetch user data:', error);
+      } else if (Users.length > userIndex) {
+        const fetchedUser = Users[userIndex]; 
+
+        // Fetch user's image from UserImages
+        /*const { data: userImages, error: imgError } = await supabase
+          .from('UserImages')
+          .select('path')
+          .eq('user_id', fetchedUser.user_id);
+
+        if (imgError) {
+          console.log('Failed to fetch user image', imgError);
+        } else {
+          // Set the user data to state
+          setUser({
+             name: fetchedUser.FirstName + ' ' + fetchedUser.LastName,
+             imageUrl: userImages[0].path, // assuming path is a url of the image. You might need to process the path further to make it a complete URL if necessary.
+             description: "User description" 
+          });
+        }*/
+
+        // Set the user data to state
+        setUser({
+           name: fetchedUser.FirstName + ' ' + fetchedUser.LastName, 
+           imageUrl: 'https://m.media-amazon.com/images/M/MV5BOWU1ODBiNGUtMzVjNi00MzdhLTk0OTktOWRiOTIxMWNhOGI2XkEyXkFqcGdeQXVyMTU2OTM5NDQw._V1_FMjpg_UX1000_.jpg',
+           description: "User description" 
+        });
+      }
+    };
+
+    fetchUserData();
+  }, []);
 
     const handleStart = (clientX) => {
       setStartX(clientX);
@@ -61,9 +101,11 @@ const SwipePage = () => {
     React.useEffect(() => {
       const diffX = endX - startX;
       if (diffX > 50) {
-          console.log('Swipe right'); // positive value means swipe right
+          console.log('Swipe right, now showing user #' + userIndex); // positive value means swipe right
+          setUserIndex(userIndex + 1);
       } else if (diffX < -50) {
-          console.log('Swipe left'); // negative value means swipe left
+          console.log('Swipe left, now showing user #' + userIndex); // negative value means swipe left
+          setUserIndex(userIndex + 1);
       }
     }, [endX]);
 
@@ -79,7 +121,9 @@ const SwipePage = () => {
       <ThemeProvider theme={theme}>
       <CssBaseline />
       <div>
-      <Card sx={{ width: 345 }} id="swipe-card">
+      {
+        user && (
+        <Card sx={{ width: 345 }} id="swipe-card">
         <CardMedia
           sx={{ height: 350 }}
           image={user.imageUrl}
@@ -96,6 +140,9 @@ const SwipePage = () => {
           </CardContent>
         </CardActionArea>
       </Card>
+        )
+      }
+      
       </div>
       <div>
       <Box sx={{ width: 345 }}>
