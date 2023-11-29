@@ -1,3 +1,5 @@
+import "server-only";
+
 /** @type {import("next").Metadata} */
 import React from 'react';
 import Button from '@mui/material/Button';
@@ -9,12 +11,33 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Avatar from '@mui/material/Avatar';
 
+import createServerClient from "~/auth/createServerClient.js";
+import getUser from "~/auth/getUser";
 
 export const metadata = {
     title: 'BruinConnect | Matches',
 }
 
-export default function Matches() {
+export default async function Matches() {
+    const supabase = createServerClient();
+	const user = await getUser(supabase);
+    const user_id = user.auth.id;
+
+    const { data: user_liked_data } = await supabase.from('UserSwipes').select('*').eq('user_id', user_id).eq('right', true);
+    const { data: liked_user_data } = await supabase.from('UserSwipes').select('*').eq('other_id', user_id).eq('right', true);
+
+    let user_liked = new Set();
+    user_liked_data.forEach(like => user_liked.add(like.other_id));
+
+    let matches = [];
+    for (const like of liked_user_data) {
+        if (user_liked.has(like.user_id)) {
+            matches.push(like.user_id);
+        }
+    }
+
+    const profiles = matches.map(other_id => <Profile key={other_id} user_id={other_id} />);
+
 	return (
         <>
             <div
@@ -32,17 +55,17 @@ export default function Matches() {
                     justifyContent: "center",
                 }}
             >
-                <Stack spacing={2}>
-                    <Profile>Item 1</Profile>
-                    <Profile>Item 2</Profile>
-                    <Profile>Item 3</Profile>
-                </Stack>
+                {profiles}
             </div >
         </>
     );
 }
 
-function Profile(){
+async function Profile({ user_id }){
+    const supabase = createServerClient();
+    const { data: user_data } = await supabase.from('Users').select('*').eq('UserUID', user_id);
+    //console.log(user_data[0])
+
 	return (
         <Card sx={{ padding: 4 }}>
           <CardMedia
@@ -52,7 +75,7 @@ function Profile(){
           />
           <CardContent>
             <Typography gutterBottom variant="h5" component="div">
-              Lizard
+              {user_data[0].FirstName} {user_data[0].LastName}
             </Typography>
             <Typography variant="body2" color="text.secondary">
                 Age
