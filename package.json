@@ -6,11 +6,14 @@
     "@mui/icons-material": "^5.14.16",
     "@mui/material": "^5.14.17",
     "@mui/styled-engine-sc": "^6.0.0-alpha.5",
+    "@refinedev/cli": "^2.16.1",
+    "@refinedev/mui": "^5.13.17",
     "@supabase/auth-helpers-nextjs": "^0.8.1",
     "@supabase/supabase-js": "^2.38.2",
     "next": "^13.5.6",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-query": "^3.39.3",
     "styled-components": "^6.1.1"
   },
   "scripts": {
