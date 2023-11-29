@@ -41,7 +41,7 @@ const PAGES = [
 	},
 	{
 		label: "Profile",
-		url: "/app/profile",
+		url: "/app/own-profile",
 		icon: <ProfileIcon />,
 	},
 ]
