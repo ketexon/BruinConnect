@@ -5,13 +5,10 @@ import FastForwardIcon from '@mui/icons-material/FastForward';
 import { useState, useEffect, useRef } from 'react';
 import '@fontsource/roboto/300.css';
 
-import { createClient } from '@supabase/supabase-js'
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-const supabase = createClient(supabaseUrl, supabaseKey)
-
 import { SwitchTransition, CSSTransition } from "react-transition-group";
 import "./styles.css"
+
+import createBrowserClient from '~/auth/createBrowserClient';
 
 
 function QuestionText({ text }) {
@@ -51,6 +48,7 @@ function ButtonGrid({ onButtonClick }) {
 
 
 export default function ({ user_id }) {
+	const supabase = createBrowserClient();
 
 	const [questions, setQuestions] = useState({});
 	const [currQuestionId, setCurrQuestionId] = useState(-1);
