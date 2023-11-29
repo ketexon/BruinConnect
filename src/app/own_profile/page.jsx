@@ -20,7 +20,7 @@ function ProfilePicture() {
             display: "flex",
             justifyContent: "center",
         }}>
-            <Image src="g" class="circle" width="100" height="100"
+            <Image src="/default_pfp.jpg" class="circle" width="100" height="100"
             />
         </div >
     )
