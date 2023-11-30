@@ -7,10 +7,14 @@ import Button, { ButtonProps } from "@mui/material/Button"
 import Snackbar from "@mui/material/Snackbar"
 import Alert from '@mui/material/Alert';
 
+import { ApiResponse } from "~/app/api/response"
+import { UploadResponse } from "~/app/api/upload/types"
+
 /**
  * @typedef {Object} ImageUploadProps
  * @property {((path: string) => void) | ((path: string) => Promise<void>)} onFileUpload
  * @property {((message: string) => void) | ((message: string) => Promise<void>) | null} onFileUploadError
+ * @property {string | null} label
  * @property {Omit<ButtonProps, "onClick" | "type"> | null} buttonProps
  */
 
@@ -19,7 +23,7 @@ import Alert from '@mui/material/Alert';
  * @returns {React.ReactElement}
  */
 
-export default function ImageUpload({ onFileUpload, onFileUploadError, buttonProps }){
+export default function ImageUpload({ label, onFileUpload, onFileUploadError, buttonProps }){
 	/**
 	 * @type {React.MutableRefObject<HTMLInputElement | null>}
 	 */
@@ -51,18 +55,18 @@ export default function ImageUpload({ onFileUpload, onFileUploadError, buttonPro
 		fetch(`${window.location.origin}/api/upload`, {
 			method: "POST",
 			body: formdata,
-		}).then(async res => {
-			return res.json();
-		}).then(({ path, error, message }) => {
-			if(error){
-				onError(message);
-			}
-			else{
-				onFileUpload(path);
-			}
-		}).catch((error) => {
-			onError(error);
 		})
+			.then(async res => /** @type {Promise<ApiResponse<UploadResponse>>} */ (res.json()))
+			.then(({ data, error }) => {
+				if(error){
+					onError(error);
+				}
+				else{
+					onFileUpload(data);
+				}
+			}).catch((error) => {
+				onError(error);
+			})
 	}
 	return <>
 		<input hidden
@@ -74,7 +78,7 @@ export default function ImageUpload({ onFileUpload, onFileUploadError, buttonPro
 		<Button
 			onClick={() => {fileInputRef.current.click();}}
 			type="button" {...buttonProps ?? {}}
-		>Upload file</Button>
+		>{label ?? "Upload Image"}</Button>
 		<Snackbar
 			open={snackbarMessage !== null}
 			autoHideDuration={5000}

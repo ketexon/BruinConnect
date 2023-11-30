@@ -4,7 +4,7 @@ import { User as SupabaseUser, SupabaseClient } from "@supabase/supabase-js"
 /**
  * @typedef {Object} User
  * @property {SupabaseUser} auth
- * @property {{ UserUID: string, FirstName: string, LastName: string } | null} data
+ * @property {{ UserUID: string, FirstName: string, LastName: string, Snap: string } | null} data
  * @property {string[]} images
  */
 
