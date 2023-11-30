@@ -1,12 +1,10 @@
-import { createClient } from '@supabase/supabase-js'
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-const supabase = createClient(supabaseUrl, supabaseKey)
-
+import createServerClient from "~/auth/createServerClient.js";
 var similarity = require( 'compute-cosine-similarity' );
 
 
 export default async function (user_id) {
+    const supabase = createServerClient();
+
     try {
 
         // get number of total questions
@@ -15,11 +13,19 @@ export default async function (user_id) {
             { count: 'exact', head: true }
         );
 
-        // get responses from all users. use inner to exclude users with no responses
-        const { data: responses } = await supabase.from('Users').select(`
+        // get responses from unswiped users. use inner to exclude users with no responses
+        const { data: responses } = await supabase.from('unswiped_users').select(`
             *,
             Responses!inner(question_id, response)
         `);
+
+        // get response for current user
+        const { data: user_responses} = await supabase.from('Responses').select(`
+            *
+        `).eq('user_id', user_id);
+
+        // add user responses to list of all users we're interested in
+        responses.push({'UserUID': user_id, 'Responses': user_responses})
 
         // turn each set of responses for a certain user into a vector
         const user_vectors = responses.reduce((acc, curr_user) => {
