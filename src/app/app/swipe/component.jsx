@@ -13,7 +13,7 @@ import BottomNavigationAction from '@mui/material/BottomNavigationAction';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 
-import createBrowserClient from '~/auth/createBrowserClient';
+import useSupabase from '~/auth/useSupabase';
 
 const theme = createTheme({
   palette: {
@@ -23,7 +23,7 @@ const theme = createTheme({
 
 
 const SwipePage = ({ similar_users }) => {
-    const supabase = createBrowserClient();
+    const supabase = useSupabase();
 
     const [startX, setStartX] = React.useState(0);
     const [endX, setEndX] = React.useState(0);
@@ -33,6 +33,7 @@ const SwipePage = ({ similar_users }) => {
     const [users, setUsers] = React.useState(null);
 
     React.useEffect(() => {
+        if(supabase === null) return;
         const fetchUserData = async () => {
             try {
                 // get data of similar users
@@ -67,7 +68,7 @@ const SwipePage = ({ similar_users }) => {
         };
 
         fetchUserData();
-    }, [])
+    }, [supabase]);
 
     const handleStart = (clientX) => {
         setStartX(clientX);
@@ -107,6 +108,9 @@ const SwipePage = ({ similar_users }) => {
 
         if (userIndex+1 < users.length)
             setUserIndex(prev => prev + 1);
+        else {
+            // show some text or something here
+        }
         
     }, [endX]);
 
