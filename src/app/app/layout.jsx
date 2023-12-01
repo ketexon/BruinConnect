@@ -15,6 +15,10 @@ export default async function AppLayout({ children }) {
     if (user === null) {
         redirect("/login");
     }
+    if(user.data === null || user.images.length === 0){
+        redirect("/create-account");
+    }
+
     return (
         <>
             <Nav />

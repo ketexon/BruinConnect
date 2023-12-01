@@ -4,7 +4,8 @@ import { User as SupabaseUser, SupabaseClient } from "@supabase/supabase-js"
 /**
  * @typedef {Object} User
  * @property {SupabaseUser} auth
- * @property {{ UserUID: string, FirstName?: string, LastName?: string }} data
+ * @property {{ UserUID: string, FirstName: string, LastName: string, Snap: string } | null} data
+ * @property {string[]} images
  */
 
 /**
@@ -26,11 +27,19 @@ const getUser = React.cache(
 		const userData = await supabase
 			.from("Users")
 			.select("*")
+			.eq("UserUID", user.id)
 			.maybeSingle();
+
+		const userImages = (await supabase
+			.from("UserImages")
+			.select("path")
+			.eq("user_id", user.id))
+			.data;
 
 		return {
 			auth: user,
-			data: userData.data
+			data: userData.data,
+			images: userImages.map(({ path }) => supabase.storage.from("images").getPublicUrl(path).data.publicUrl),
 		}
 	}
 );

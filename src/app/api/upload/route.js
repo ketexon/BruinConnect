@@ -1,9 +1,12 @@
 import createServerClient from "~/auth/createServerClient";
 import getUser from "~/auth/getUser";
 
+import { ApiResponse, error, ok } from "../response"
+import { UploadResponse } from "./types"
+
 /**
  * @param {import("next/server").NextRequest} request
- * @returns {import("next/server").NextResponse}
+ * @returns {import("next/server").NextResponse<ApiResponse<UploadResponse>>}
  */
 export async function POST(request){
 	const formdata = await request.formData();
@@ -11,24 +14,21 @@ export async function POST(request){
 	const file = formdata.get("file");
 
 	if(!file){
-		return new Response(null, { status: 400 });
+		return error("Form data missing required fields");
 	}
 
 	const supabase = createServerClient();
 
 	const user = await getUser(supabase);
 	if(!user){
-		return new Response(null, { status: 401 });
+		return error("Unauthenticated", 401);
 	}
 
 	const guid = crypto.randomUUID();
-	const { data, error } = await supabase.storage.from("images").upload(guid, file)
-	if(error){
-		return new Response({
-			error: error.error,
-			message: error.message,
-			path: null,
-		}, { status: error.statusCode, statusText: error.error })
+
+	const { data, error: uploadError } = await supabase.storage.from("images").upload(guid, file)
+	if(uploadError){
+		return error(uploadError.message, { status: uploadError.statusCode })
 	}
 
 	const { error: insertError } = await supabase.from("UserImages").insert({
@@ -36,11 +36,10 @@ export async function POST(request){
 		user_id: user.auth.id,
 	});
 
-	return Response.json({
-		error: null,
-		message: null,
-		...data
-	}, {
-		status: 201
-	});
+	if(insertError){
+		await supabase.storage.from("images").remove(["guid"]);
+		return error(insertError.code, 500);
+	}
+
+	return ok(guid, 201);
 }
