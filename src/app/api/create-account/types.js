@@ -1,0 +1,5 @@
+/**
+ * @typedef {true} CreateAccountResponse
+ */
+
+export {}
