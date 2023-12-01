@@ -28,8 +28,8 @@ function ProfilePicture({ image }) {
 		// </div>
 		<Box
 			sx={{
-				height: 200,
-				width: 200,
+				width: 150,
+				height: 150,
 				background: `url(${image})`,
 				backgroundSize: "100px",
 				backgroundRepeat: "no-repeat",
