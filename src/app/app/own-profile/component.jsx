@@ -8,9 +8,13 @@ import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
 import EditIcon from '@mui/icons-material/Edit';
 import { useState, useEffect } from 'react';
+import MUIContainer, { ContainerProps } from "@mui/material/Container"
 import styles from './styles.css';
+import { EditText, EditTextarea } from 'react-edit-text';
+import 'react-edit-text/dist/index.css';
 
 import createBrowserClient from '~/auth/createBrowserClient';
+import zIndex from '@mui/material/styles/zIndex';
 
 
 // export const metadata = {
@@ -22,7 +26,7 @@ function ProfilePicture() {
 			display: "flex",
 			justifyContent: "center",
 		}}>
-			<Image src="/default_pfp.jpg" class="circle" width="100" height="100"
+			<Image src="/default_pfp.jpg" className="circle" width="400" height="400"
 			/>
 		</div >
 	)
@@ -36,36 +40,29 @@ function EditButton() {
 
 	return (
 		<IconButton>
-			<EditIcon onClick={handleEditing} class="editbutton">
+			<EditIcon onClick={handleEditing} className="editbutton">
 			</EditIcon>
 		</IconButton>
 	)
 }
 
-function ProfilePosts() {
-	return (
-		<div
-			style={{
-				display: "flex",
-				justifyContent: "center",
-			}}
-		>
-			<ImageList sx={{ width: 500, height: 450 }}>
-				{itemData.map((item) => (
-					<ImageListItem key={item.img}>
-						<img
-							srcSet={`${item.img}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
-							src={`${item.img}?w=164&h=164&fit=crop&auto=format`}
-							alt={item.title}
-							loading="lazy"
-						/>
-					</ImageListItem>
-				))}
-			</ImageList>
-		</div >
+function DescriptionEditor() {
+	const [description, setDescription] = useState('');
 
-	)
+	const handleSave = (newValue) => {
+		// Handle saving the new description, e.g., send it to the server
+		console.log('Description saved:', newValue);
+		setDescription(newValue);
+	};
+
+	return (
+		<EditText
+			placeholder='Edit your description'
+			onSave={(newDescription) => handleSave(newDescription)}
+		/>
+	);
 }
+
 
 export default function ({ user_id }) {
 	const supabase = createBrowserClient();
@@ -83,46 +80,29 @@ export default function ({ user_id }) {
 				console.log(error);
 			}
 		};
-		
+
 		fetchData();
 	}, []);
 
 	return (
 		<>
-			<ProfilePicture />
+			<MUIContainer sx={{
+				position: 'relative',
+				height: '85vh', // Set the height to 50% of the viewport height
+				display: 'flex',
+				flexDirection: 'column',
+				alignItems: 'center',
+				justifyContent: 'center',
+			}}>
 
-			<div
-				style={{
-					display: "flex",
-					justifyContent: "center",
-				}}>
+				<ProfilePicture /> <EditButton />
 
-				{firstName} {lastName}
-				<EditButton />
-			</div>
+				<DescriptionEditor />
 
-			<ProfilePosts />
+			</MUIContainer>
 
 		</>
 	);
 
 }
 
-const itemData = [
-	{
-		img: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
-		title: 'Breakfast',
-	},
-	{
-		img: 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d',
-		title: 'Burger',
-	},
-	{
-		img: 'https://images.unsplash.com/photo-1522770179533-24471fcdba45',
-		title: 'Camera',
-	},
-	{
-		img: 'https://images.unsplash.com/photo-1444418776041-9c7e33cc5a9c',
-		title: 'Coffee',
-	},
-]

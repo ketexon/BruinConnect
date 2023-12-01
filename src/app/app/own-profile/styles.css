@@ -6,8 +6,8 @@ div {
 
 .circle {
     border-radius: 50%;
-    height: 100px;
-    width: 100px;
+    height: 250px;
+    width: 250px;
     overflow: hidden;
     display: flex;
     justify-content: center;
@@ -18,4 +18,17 @@ div {
 .editbutton {
     height: 14px;
     width: px;
+}
+
+.textInput {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #dfdfdf;
+    outline: none;
+}
+
+body,
+html {
+    overflow: auto;
+    height: 100%;
 }

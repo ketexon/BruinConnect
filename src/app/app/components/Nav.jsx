@@ -46,7 +46,7 @@ const PAGES = [
 	},
 ]
 
-export default function Nav(){
+export default function Nav() {
 	const [value, setValue] = React.useState(null)
 
 	React.useEffect(() => {
@@ -61,9 +61,9 @@ export default function Nav(){
 			<BottomNavigation
 				showLabels
 				value={value}
-				onChange={(e, newValue) => void(setValue(newValue))}
+				onChange={(e, newValue) => void (setValue(newValue))}
 			>
-				{PAGES.map(({label, url, icon}, i) => (
+				{PAGES.map(({ label, url, icon }, i) => (
 					<BottomNavigationAction
 						key={i}
 						label={label}
