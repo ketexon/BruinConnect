@@ -10,21 +10,32 @@ import EditIcon from '@mui/icons-material/Edit';
 import { useState, useEffect } from 'react';
 import styles from './styles.css';
 
-import createBrowserClient from '~/auth/createBrowserClient';
-
+import useSupabase from '~/auth/useSupabase';
 
 // export const metadata = {
 //     title: 'BruinConnect | Profile',
 // }
-function ProfilePicture() {
+function ProfilePicture({ image }) {
 	return (
-		<div style={{
-			display: "flex",
-			justifyContent: "center",
-		}}>
-			<Image src="/default_pfp.jpg" class="circle" width="100" height="100"
-			/>
-		</div >
+		// <div style={{
+		// 	display: "flex",
+		// 	justifyContent: "center",
+		// 	height: '1',
+		// 	aspectRatio: '3',
+		// 	position: 'relative'
+		// }}>
+		// 	<Image src={image} alt="Profile Picture" layout="fill" objectFit="contain" />
+		// </div>
+		<Box
+			sx={{
+				height: 200,
+				width: 200,
+				background: `url(${image})`,
+				backgroundSize: "100px",
+				backgroundRepeat: "no-repeat",
+				backgroundPosition: "center"
+			}} 
+		/>
 	)
 }
 
@@ -63,21 +74,26 @@ function ProfilePosts() {
 				))}
 			</ImageList>
 		</div >
-
 	)
 }
 
-export default function ({ user_id }) {
-	const supabase = createBrowserClient();
+export default function ({ user_id, profile_id }) {
+	const supabase = useSupabase();
 	const [firstName, setFirstName] = useState();
 	const [lastName, setLastName] = useState();
+	const [profileImage, setProfileImage] = useState();
 
 	useEffect(() => {
+		if(supabase === null) return;
 		const fetchData = async () => {
 			try {
-				const { data: data } = await supabase.from('Users').select('*').eq('UserUID', user_id);
+				const { data: data } = await supabase.from('Users').select('*').eq('UserUID', profile_id);
 				setFirstName(data[0].FirstName);
 				setLastName(data[0].LastName);
+
+				const { data: path } = await supabase.from('UserImages').select('path').eq('user_id', profile_id).limit(1);
+				const imageUrl = path.length ? supabase.storage.from("images").getPublicUrl(path[0].path).data.publicUrl : "";
+				setProfileImage(imageUrl);
 
 			} catch (error) {
 				console.log(error);
@@ -85,11 +101,13 @@ export default function ({ user_id }) {
 		};
 		
 		fetchData();
-	}, []);
+	}, [supabase]);
 
 	return (
 		<>
-			<ProfilePicture />
+			<Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }} >
+				{profileImage && <ProfilePicture image={profileImage} />}
+			</Box>
 
 			<div
 				style={{
