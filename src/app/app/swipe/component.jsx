@@ -7,9 +7,6 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { CardActionArea } from '@mui/material';
-import Box from '@mui/material/Box';
-import BottomNavigation from '@mui/material/BottomNavigation';
-import BottomNavigationAction from '@mui/material/BottomNavigationAction';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 
@@ -21,13 +18,25 @@ const theme = createTheme({
   },
 });
 
+const logUserSwipe = async (userId, otherId, rightSwipe) => {
+    try {
+        const { data, error } = await supabase
+            .from('UserSwipes')
+            .insert([
+                { user_id: userId, other_id: otherId, right: rightSwipe },
+            ]);
+        if(error) console.error("Error inserting swipe:", error);
+    } catch (error) {
+        console.error("Unexpected error:", error);
+    }
+};
 
-const SwipePage = ({ similar_users }) => {
+
+const SwipePage = ({ similar_users, userId }) => {
     const supabase = useSupabase();
 
     const [startX, setStartX] = React.useState(0);
     const [endX, setEndX] = React.useState(0);
-    const [value, setValue] = React.useState(1);
     const [isDragging, setIsDragging] = React.useState(false);
     const [userIndex, setUserIndex] = React.useState(0);
     const [users, setUsers] = React.useState(null);
@@ -97,11 +106,19 @@ const SwipePage = ({ similar_users }) => {
 
     React.useEffect(() => {
         const diffX = endX - startX;
+
+        if (!users || users.length === 0) return;
+        
+        // Get current user data
+        const currentUser = users[userIndex];   //this is the profile of the 
+
         if (diffX > 50) {
             console.log('Swipe right, now showing user #' + userIndex); // positive value means swipe right
+            logUserSwipe(userId, currentUser.UserUID, true);
         }
         else if (diffX < -50) {
             console.log('Swipe left, now showing user #' + userIndex); // negative value means swipe left
+            logUserSwipe(userId, currentUser.UserUID, false);
         }
         else
             return;

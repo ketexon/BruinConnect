@@ -10,5 +10,5 @@ export default async function Swipe(){
 	const user = await getUser(supabase);
 	const similar_users = await getMatches(user.auth.id);
 
-	return <SwipePage similar_users={similar_users}/>
+	return <SwipePage similar_users={similar_users} userId={user.auth.id}/>
 }
