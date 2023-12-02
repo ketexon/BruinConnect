@@ -46,7 +46,7 @@ export default async function Matches() {
                     justifyContent: "center",
                 }}
             >
-                Your Matches
+            <Typography variant="h1" mb={4}>Your Matches</Typography>
             </div>
 
             <div
@@ -55,7 +55,9 @@ export default async function Matches() {
                     justifyContent: "center",
                 }}
             >
+                <Stack spacing={2}>
                 {profiles}
+                </Stack>
             </div >
         </>
     );
@@ -64,7 +66,7 @@ export default async function Matches() {
 async function Profile({ user_id }){
     const supabase = createServerClient();
     const { data: user_data } = await supabase.from('Users').select('*').eq('UserUID', user_id);
-    //console.log(user_data[0])
+    console.log(user_data[0].Snap);
 
 	return (
         <Card sx={{ padding: 4 }}>
@@ -77,7 +79,7 @@ async function Profile({ user_id }){
             <Typography gutterBottom variant="h5" component="div">
               {user_data[0].FirstName} {user_data[0].LastName}
             </Typography>
-            <Typography variant="body2" color="text.secondary">
+            {/* <Typography variant="body2" color="text.secondary">
                 Age
             </Typography>
             <Typography variant="body2" color="text.secondary">
@@ -91,7 +93,7 @@ async function Profile({ user_id }){
             </Typography>
             <Typography variant="body2" color="text.secondary">
                 Major
-            </Typography>
+            </Typography> */}
           </CardContent>
           <CardActions>
             <Button size="small">View Profile</Button>
@@ -100,6 +102,9 @@ async function Profile({ user_id }){
           <Button>
           <Avatar src={'./SnapChatLogo.png'} variant="square"/>
           </Button>
+          <Typography gutterBottom variant="h5" component="div">
+              {user_data[0].Snap}
+            </Typography>
           </CardActions>
         </Card>
       );
