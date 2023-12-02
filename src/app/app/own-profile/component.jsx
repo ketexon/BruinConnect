@@ -46,13 +46,14 @@ function EditButton() {
 	)
 }
 
-function DescriptionEditor() {
-	const [description, setDescription] = useState('');
+function DescriptionEditor(initial_description) {
+	const [description, setDescription] = useState({ initial_description });
 
 	const handleSave = (newValue) => {
 		// Handle saving the new description, e.g., send it to the server
 		console.log('Description saved:', newValue);
 		setDescription(newValue);
+
 	};
 
 	return (
@@ -68,6 +69,10 @@ export default function ({ user_id }) {
 	const supabase = createBrowserClient();
 	const [firstName, setFirstName] = useState();
 	const [lastName, setLastName] = useState();
+
+	const handleDescriptionSave = (newValue) => {
+		supabase.from("Users").update({ description: newValue }).eq({ UserUID: user_id })
+	}
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -96,8 +101,9 @@ export default function ({ user_id }) {
 			}}>
 
 				<ProfilePicture /> <EditButton />
+				<h1>{firstName} {lastName}</h1>
 
-				<DescriptionEditor />
+				<DescriptionEditor onClick={handleDescriptionSave} />
 
 			</MUIContainer>
 
