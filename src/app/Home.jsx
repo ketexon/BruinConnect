@@ -9,8 +9,14 @@ import Button from "@mui/material/Button"
 import TitleGradient from "./TitleGradient"
 
 import Link from "next/link"
+import React from "react";
 
-export default function Home(){
+/**
+ * @param {{ loggedIn: bool }} param0
+ * @returns {React.ReactNode}
+ */
+
+export default function Home({ loggedIn }){
 	return <Container sx={(theme) => ({
 		minHeight: "100vh",
 		pt: 4
@@ -34,19 +40,29 @@ export default function Home(){
 		}}/>
 		<Stack direction="column" alignItems="center">
 			<Stack alignItems="stretch" gap={1}>
-				<Button variant="outlined" size="large"
-					component={Link}
-					href="/login"
-				>
-					Login
-				</Button>
-				<Button variant="outlined" size="large"
-					color="secondary"
-					component={Link}
-					href="/signup"
-				>
-					Signup
-				</Button>
+				{!loggedIn && <><Button variant="outlined" size="large"
+						component={Link}
+						href="/login"
+					>
+						Login
+					</Button>
+					<Button variant="outlined" size="large"
+						color="secondary"
+						component={Link}
+						href="/signup"
+					>
+						Signup
+					</Button>
+				</>
+				}
+				{loggedIn && <>
+					<Button variant="outlined" size="large"
+						component={Link}
+						href="/app"
+					>
+						Go to App
+					</Button>
+				</>}
 			</Stack>
 		</Stack>
 	</Container>
