@@ -95,17 +95,17 @@ async function Profile({ user_id }){
                 Major
             </Typography> */}
           </CardContent>
-          <CardActions>
-            <Button size="small">View Profile</Button>
-          </CardActions>
-          <CardActions>
-          <Button>
-          <Avatar src={'./SnapChatLogo.png'} variant="square"/>
-          </Button>
-          <Typography gutterBottom variant="h5" component="div">
-              {user_data[0].Snap}
+            <CardActions>
+                <Button size="small">View Profile</Button>
+            </CardActions>
+            <CardActions>
+            <Button>
+            <Avatar src={'/SnapchatLogo.png'} variant="square"/>
+            </Button>
+            <Typography gutterBottom variant="h5" component="div">
+                {user_data[0].Snap}
             </Typography>
-          </CardActions>
+            </CardActions>
         </Card>
       );
 }
