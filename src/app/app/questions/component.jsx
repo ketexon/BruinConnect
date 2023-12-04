@@ -14,18 +14,18 @@ import Container from '~/components/Container';
 
 function QuestionText({ text }) {
 	return (
-		<Typography component="div" sx={{ mx: 4, mt: 15 }}>
-			<Box sx={{ textAlign: 'center', fontSize: 30, minHeight: 150 }}>{text}</Box>
+		<Typography component="div" sx={{ mx: 4, mt: 20 }}>
+			<Box sx={{ textAlign: 'center', fontSize: 30, minHeight: 200 }}>{text}</Box>
 		</Typography>
 	)
 }
 
 
-function ButtonGrid({ onButtonClick }) {
+function ButtonGrid({ onButtonClick, disabled }) {
 	const grid = [];
 	for (let i = 1; i <= 6; i++)
 		grid.push(
-			<Button key={i} onClick={() => onButtonClick(i)} size="large" variant="contained">
+			<Button disabled={disabled} key={i} onClick={() => onButtonClick(i)} size="large" variant="contained">
 				  <Typography variant="h5">{i}</Typography>
 			</Button>
 		);
@@ -35,7 +35,7 @@ function ButtonGrid({ onButtonClick }) {
 			display: 'flex',
 			flexDirection: 'column',
 			alignItems: 'center',
-			mt: 35,
+			mt: 25,
 			'& > *': {
 				m: 1,
 			}
@@ -174,35 +174,42 @@ export default function ({ user_id }) {
 
 
 	return (
-		<Container sx={{ overflow: "visible"}}>
-			<SwitchTransition>
-				<CSSTransition
-					key={refOneIsActive}
-					nodeRef={nodeRef}
-					addEndListener={(done) => {
-						nodeRef.current.addEventListener("transitionend", done, false);
-					}}
-					classNames="fade"
-				>
-					<div ref={nodeRef}>
-						<QuestionText text={refOneIsActive ? refOneQuestion : refTwoQuestion}/>
+		(Object.keys(questions).length !== 0 || allQuestionsAnswered) &&
+		(
+			<Container sx={{ overflow: "visible"}}>
+				<SwitchTransition>
+					<CSSTransition
+						key={refOneIsActive}
+						nodeRef={nodeRef}
+						addEndListener={(done) => {
+							nodeRef.current.addEventListener("transitionend", done, false);
+						}}
+						classNames="fade"
+					>
+						<div ref={nodeRef}>
+							<QuestionText text={refOneIsActive ? refOneQuestion : refTwoQuestion}/>
 
-						<ButtonGrid onButtonClick={handleButtonClick}/>
+							<ButtonGrid onButtonClick={handleButtonClick} disabled={allQuestionsAnswered}/>
 
-						<Stack direction="row" justifyContent="space-between" sx={{ mx: 4 }}>
-							<Typography>Strongly Disagree</Typography>
-							<Typography sx={{ textAlign: 'right' }}>Strongly Agree</Typography>
-						</Stack>
+							<Stack direction="row" justifyContent="space-between" sx={{ mx: 4 }}>
+								<Typography sx={{ color: allQuestionsAnswered ? 'rgba(255, 255, 255, 0.3)' : 'white' }}>
+									Strongly Disagree
+								</Typography>
+								<Typography sx={{ color: allQuestionsAnswered ? 'rgba(255, 255, 255, 0.3)' : 'white', textAlign: 'right' }}>
+									Strongly Agree
+								</Typography>
+							</Stack>
 
-						<Grid container justifyContent="flex-end">
-							<Button variant="text" endIcon={<FastForwardIcon />} sx={{ mx: 5, mt: 8, py: 1.5 }}
-									size="large" onClick={() => handleButtonClick(null)}>
-								<Typography variant='h5'>SKIP</Typography>
-							</Button>
-						</Grid>
-					</div>
-				</CSSTransition>
-			</SwitchTransition>
-		</Container>
+							<Grid container justifyContent="flex-end">
+								<Button disabled={allQuestionsAnswered} variant="text" endIcon={<FastForwardIcon />}
+										sx={{ m: 4, py: 1.5 }} size="large" onClick={() => handleButtonClick(null)}>
+									<Typography variant='h5'>SKIP</Typography>
+								</Button>
+							</Grid>
+						</div>
+					</CSSTransition>
+				</SwitchTransition>
+			</Container>
+		)
 	);
 }
