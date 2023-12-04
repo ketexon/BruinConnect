@@ -24,3 +24,5 @@ Paste these lines into a file named `.env` in the root of the project.
 NEXT_PUBLIC_SUPABASE_URL=https://rfwcuudvpubixktmmbpu.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJmd2N1dWR2cHViaXhrdG1tYnB1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTgxMjMwNTgsImV4cCI6MjAxMzY5OTA1OH0.CWTRsuUpI62h-N-kGPI9x-M9gKx91FoSaQG4fUFiDYg
 ```
+
+To start the app, use `yarn dev` and navigate to `localhost:3000` in your web browser.
