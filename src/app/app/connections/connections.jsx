@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Button from '@mui/material/Button';
+import Box from '@mui/material/Box'
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
@@ -40,6 +41,8 @@ export default function Matches({ matchData }) {
         )
     }, [search])
 
+    const hasMatches = (profiles.length !== 0);
+
 
     return (
         <Container sx={{ pt: 2 }}>
@@ -52,6 +55,9 @@ export default function Matches({ matchData }) {
                 >
                     <Typography variant="h1" mb={4}>Your Matches</Typography>
                 </div>
+                {hasMatches
+                ? 
+                <Stack direction="column" alignItems="stretch">
                 <TextField
                     label="Search"
                     value={search}
@@ -68,10 +74,21 @@ export default function Matches({ matchData }) {
                 <Stack spacing={2} alignItems="stretch" sx={{ pb: 10 }}>
                     {profiles}
                 </Stack>
+                </Stack>
+                : 
+                <div
+                    style={{
+                        display: "flex",
+                        justifyContent: "center",
+                    }}
+                >
+                    <Typography variant="h5"> You have no matches. Keep swiping!</Typography>
+                </div>
+                }
             </Stack>
         </Container>
     );
-}
+
 
 
 function Profile({ data, images }) {
@@ -113,4 +130,5 @@ function Profile({ data, images }) {
             </CardActions>
         </Card>
     );
+}
 }
