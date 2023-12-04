@@ -71,7 +71,8 @@ const SwipePage = ({ similar_users, userId }) => {
                 };
 
                 // set user data
-                setUsers(userData); 
+                if (users.length !== 0)
+                    setUsers(userData); 
                 setLoaded(true);
             }
             catch (error) {
@@ -83,11 +84,13 @@ const SwipePage = ({ similar_users, userId }) => {
     }, [supabase]);
 
     const handleStart = (clientX) => {
+        if (!users || userIndex >= users.length) return; // Disable swipe when no users left
         setStartX(clientX);
         setIsDragging(true);
     }
     
     const handleEnd = (clientX) => {
+        if (!users || userIndex >= users.length) return; // Disable swipe when no users left
         setEndX(clientX);
         setIsDragging(false);
         
@@ -96,6 +99,7 @@ const SwipePage = ({ similar_users, userId }) => {
     }
 
     const handleMove = (clientX) => {
+        if (!users || userIndex >= users.length) return; // Disable swipe when no users left
         if(isDragging) {
             const card = document.getElementById('swipe-card');
             const moveDistance = clientX - startX;
