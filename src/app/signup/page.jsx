@@ -8,7 +8,8 @@ import Container from "~/components/Container";
 import Stack from "@mui/material/Stack";
 
 import { redirect, useParams } from "next/navigation";
-import { NextResponse } from "next/server";
+
+import Link from "~/components/Link";
 
 export default function Signup(){
 	const params = useParams();
@@ -53,34 +54,39 @@ export default function Signup(){
 	>
 		<Typography variant="h1" mb={4}>Sign Up</Typography>
 		<Stack direction="column" gap={2}>
-		<TextField variant="outlined" required
-				id="email" name="email" type="email"
-				label="UCLA Email"
-				inputProps={{
-					pattern: String.raw`^[a-zA-Z0-9_!.#$%&*+\/=?^\`\{\|\}~\-]+@(?:g\.)?ucla\.edu$`,
-					onInput: onEmailInput
-				}}
-			/>
-			<TextField variant="outlined" required
-				id="password" name="password" type="password"
-				label="Password"
-				inputRef={passwordFieldRef}
-				inputProps={{
-					minLength: 6,
-				}}
-			/>
-			<TextField variant="outlined" required
-				id="repassword" name="repassword" type="password"
-				label="Re-enter Password"
-				inputProps={{
-					onInput: onRepasswordInput
-				}}
-			/>
+			<Stack direction="column" gap={1}>
+				<TextField variant="outlined" required
+					id="email" name="email" type="email"
+					label="UCLA Email"
+					inputProps={{
+						pattern: String.raw`^[a-zA-Z0-9_!.#$%&*+\/=?^\`\{\|\}~\-]+@(?:g\.)?ucla\.edu$`,
+						onInput: onEmailInput
+					}}
+				/>
+				<TextField variant="outlined" required
+					id="password" name="password" type="password"
+					label="Password"
+					inputRef={passwordFieldRef}
+					inputProps={{
+						minLength: 6,
+					}}
+				/>
+				<TextField variant="outlined" required
+					id="repassword" name="repassword" type="password"
+					label="Re-enter Password"
+					inputProps={{
+						onInput: onRepasswordInput
+					}}
+				/>
+			</Stack>
 			<Button
 				type="submit"
 				variant="contained"
 				sx={{ alignSelf: "flex-start" }}
 			>Submit</Button>
+			<Stack direction="column" alignItems="flex-start">
+				<Link href="/login">Login</Link>
+			</Stack>
 		</Stack>
 	</Container>
 }
