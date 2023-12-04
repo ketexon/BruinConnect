@@ -120,11 +120,11 @@ const SwipePage = ({ similar_users, userId }) => {
         // Get current user data
         const currentUser = users[userIndex];
 
-        if (diffX > 50) {
+        if (diffX > 80) {
             // console.log('Swipe right, now showing user #' + userIndex); // positive value means swipe right
             logUserSwipe(userId, currentUser.UserUID, true);
         }
-        else if (diffX < -50) {
+        else if (diffX < -80) {
             // console.log('Swipe left, now showing user #' + userIndex); // negative value means swipe left
             logUserSwipe(userId, currentUser.UserUID, false);
         }
