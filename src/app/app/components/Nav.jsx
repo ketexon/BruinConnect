@@ -17,6 +17,7 @@ import ProfileIcon from "@mui/icons-material/AccountCircle"
  * @typedef {Object} Page
  * @property {string} label
  * @property {string} url
+ * @property {((s: string) => boolean) | undefined} urlMatch
  * @property {React.ReactNode} icon
  */
 
@@ -42,6 +43,7 @@ const PAGES = [
 	{
 		label: "Profile",
 		url: "/app/profile",
+		urlMatch: url => /\/app\/[^\/]+\/profile/,
 		icon: <ProfileIcon />,
 	},
 ]
@@ -50,14 +52,15 @@ export default function Nav() {
 	const [value, setValue] = React.useState(null)
 
 	React.useEffect(() => {
-		setValue(Math.max(PAGES.findIndex(({ url }) => url === window.location.pathname), 0));
+		setValue(Math.max(PAGES.findIndex(({ urlMatch, url }) => urlMatch ? urlMatch(window.location.pathname) : url === window.location.pathname), 0));
 	}, [])
 
 	return (
-		<Paper sx={{
+		<Paper sx={theme => ({
 			position: "fixed",
 			bottom: 0, left: 0, right: 0,
-		}}>
+			zIndex: theme.zIndex.appBar
+		})}>
 			<BottomNavigation
 				showLabels
 				value={value}
