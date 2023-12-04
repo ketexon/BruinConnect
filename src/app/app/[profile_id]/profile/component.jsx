@@ -47,15 +47,8 @@ function EditButton() {
 	)
 }
 
-function DescriptionEditor(initial_description) {
+function DescriptionEditor({ initial_description, handleSave }) {
 	const [description, setDescription] = useState({ initial_description });
-
-	const handleSave = (newValue) => {
-		// Handle saving the new description, e.g., send it to the server
-		console.log('Description saved:', newValue);
-		setDescription(newValue);
-
-	};
 
 	return (
 		<EditText
@@ -67,13 +60,36 @@ function DescriptionEditor(initial_description) {
 
 
 export default function ({ profile_id }) {
-	const supabase = createBrowserClient();
+	const supabase = useSupabase();
 	const [firstName, setFirstName] = useState();
 	const [lastName, setLastName] = useState();
 	const [profileImage, setProfileImage] = useState();
 
-	const handleDescriptionSave = (newValue) => {
-		supabase.from("Users").update({ description: newValue }).eq({ UserUID: profile_id })
+	// const handleDescriptionSave = (newValue) => {
+	// 	console.log("new value: " + newValue);
+	// 	supabase.from("Users").update({ description: newValue }).eq({ UserUID: profile_id })
+	// }
+
+	async function handleSave(newValue) {
+		console.log(profile_id + " " + newValue.value);
+
+		// supabase.from("Users").update({ description: newValue }).eq({ UserUID: profile_id });
+
+		try {
+
+			// const { data, error } = await supabase
+			// 	.from('Users')
+			// 	.update({ description: newValue.value })
+			// 	.eq('UserUID', profile_id)
+			// 	.select();
+
+			const { error } = await supabase
+				.from('Users')
+				.insert({ description: newValue, UserUID: profile_id });
+
+		} catch (error) {
+			console.log(error);
+		}
 	}
 
 	useEffect(() => {
@@ -110,7 +126,7 @@ export default function ({ profile_id }) {
 				<ProfilePicture image={profileImage} /> <EditButton />
 				<h1>{firstName} {lastName}</h1>
 
-				<DescriptionEditor onClick={() => handleDescriptionSave("My new description")} />
+				<DescriptionEditor initial_description="" handleSave={handleSave} />
 
 			</MUIContainer>
 
