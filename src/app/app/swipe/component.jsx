@@ -151,7 +151,7 @@ const SwipePage = ({ similar_users, userId }) => {
                 <CssBaseline />
                 <div>
                 {
-                    loaded && users && (
+                    loaded && (users ? (
                         <Card sx={{ width: 345 }} id="swipe-card">
                             <CardMedia
                                 sx={{ height: 350 }}
@@ -168,12 +168,9 @@ const SwipePage = ({ similar_users, userId }) => {
                                 </CardContent>
                             </CardActionArea>
                         </Card>
-                        )
-                }
-                {
-                    loaded && !users && (
+                        ) : (
                         <Typography>You've swiped on all users!</Typography>
-                    )
+                    ))
                 }
                 </div>
             </ThemeProvider>
