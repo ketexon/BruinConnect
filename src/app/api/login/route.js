@@ -12,10 +12,14 @@ export async function POST(request) {
 	const email = formData.get("email");
 	const password = formData.get("password");
 
-	await supabase.auth.signInWithPassword({
+	const { error } = await supabase.auth.signInWithPassword({
 		email,
 		password,
 	})
+
+	if(error) {
+		return Response.redirect(`${origin}/login?error=${error.message}`)
+	}
 
 	return Response.redirect(`${origin}/app`)
 }

@@ -5,42 +5,33 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField"
 import FormControl from "@mui/material/FormControl"
 import FormHelperText from "@mui/material/FormHelperText"
-import { redirect, useParams } from "next/navigation";
 import Typography from "@mui/material/Typography";
 import Container from "~/components/Container";
 import Stack from "@mui/material/Stack";
 import Alert from "@mui/material/Alert"
 import AlertTitle from "@mui/material/AlertTitle"
 
-
 import { NextResponse } from "next/server";
 import Link from "~/components/Link";
 
-export default function Login({ searchParams: { error, success, message } }){
+export default function ResetPassword({ searchParams: { error, success } }){
 	return <Container
 		sx={{ py: 2 }}
 		component="form"
 		method="POST"
-		action="/api/login"
+		action="/api/reset-password"
 	>
-		<Typography variant="h1" mb={4}>Login</Typography>
-		{ success && <Alert sx={{ mb: 2 }}>
+		<Typography variant="h1" mb={4}>Reset Password</Typography>
+		{success && <Alert color="success" sx={{ mb: 2 }}>
 			<AlertTitle>Success</AlertTitle>
-			{message}
+			Please check your email
 		</Alert>}
 		<Stack direction="column" gap={2}>
 			<Stack direction="column" gap={1}>
-				<TextField variant="outlined" required
-					id="email" name="email" type="email"
-					label="UCLA Email"
-				/>
 				<FormControl>
 					<TextField variant="outlined" required
-						id="password" name="password" type="password"
-						label="Password"
-						inputProps={{
-							minLength: 6,
-						}}
+						id="email" name="email" type="email"
+						label="Email"
 						sx={{ width: "100%" }}
 					/>
 					{error && <FormHelperText error>
