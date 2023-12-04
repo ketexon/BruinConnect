@@ -5,7 +5,7 @@ import { User } from "./getUser"
 /**
  * @param {SupabaseClient} supabase
  * @param {string} userID
- * @returns {Promis<Omit<"auth", User> | null>}
+ * @returns {Promis<Omit<"auth", import("~/auth/getUser").User> | null>}
  */
 export default async function(supabase, userID) {
 	const userData = await supabase

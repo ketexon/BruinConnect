@@ -2,6 +2,7 @@
 
 import './swipe.css';
 import * as React from 'react';
+import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
@@ -12,12 +13,8 @@ import CssBaseline from '@mui/material/CssBaseline';
 
 import useSupabase from '~/auth/useSupabase';
 
-const theme = createTheme({
-  palette: {
-    mode: 'light',
-  },
-});
-
+import HeartIcon from "@mui/icons-material/Favorite"
+import SentimentVeryDissatisfiedIcon from '@mui/icons-material/SentimentVeryDissatisfied';
 
 const SwipePage = ({ similar_users, userId }) => {
     const supabase = useSupabase();
@@ -28,6 +25,9 @@ const SwipePage = ({ similar_users, userId }) => {
     const [userIndex, setUserIndex] = React.useState(0);
     const [users, setUsers] = React.useState(null);
     const [loaded, setLoaded] = React.useState(false);
+    const [swipingRight, setSwipingRight] = React.useState(false);
+
+    const swipeIconRef = React.useRef();
 
     const logUserSwipe = async (userId, otherId, rightSwipe) => {
         try {
@@ -72,7 +72,7 @@ const SwipePage = ({ similar_users, userId }) => {
 
                 // set user data
                 if (users.length !== 0)
-                    setUsers(userData); 
+                    setUsers(userData);
                 setLoaded(true);
             }
             catch (error) {
@@ -87,15 +87,18 @@ const SwipePage = ({ similar_users, userId }) => {
         if (!users || userIndex >= users.length) return; // Disable swipe when no users left
         setStartX(clientX);
         setIsDragging(true);
+
+        swipeIconRef.current.style.transform = `scale(0%)`
     }
-    
+
     const handleEnd = (clientX) => {
         if (!users || userIndex >= users.length) return; // Disable swipe when no users left
         setEndX(clientX);
         setIsDragging(false);
-        
+
         const card = document.getElementById('swipe-card');
         card.style.transform = `translateX(0px)`; // reset position
+        swipeIconRef.current.style.transform = `scale(0%)`;
     }
 
     const handleMove = (clientX) => {
@@ -103,11 +106,18 @@ const SwipePage = ({ similar_users, userId }) => {
         if(isDragging) {
             const card = document.getElementById('swipe-card');
             const moveDistance = clientX - startX;
-        
+            if(moveDistance > 0 != swipingRight) {
+                setSwipingRight(moveDistance >= 0);
+            }
+
             // here we're setting rotation angle in range from -15 to 15 degrees based on move distance.
             const rotateAngle = Math.max(-15, Math.min(15, moveDistance / 13));
-        
+
             card.style.transform = `translateX(${moveDistance}px) rotate(${rotateAngle}deg)`;
+
+            const iconScale = Math.min(1, Math.abs(moveDistance) / 150);
+            console.log(iconScale);
+            swipeIconRef.current.style.transform = `scale(${iconScale * 100}%)`
         }
     }
 
@@ -135,48 +145,71 @@ const SwipePage = ({ similar_users, userId }) => {
             setUserIndex(prev => prev + 1);
         else
             setUsers(null);
-        
+
     }, [endX]);
 
     return (
-        <div className="center-div" 
-            onTouchStart={(e) => handleStart(e.touches[0].clientX)} 
+        <div className="center-div"
+            onTouchStart={(e) => handleStart(e.touches[0].clientX)}
             onTouchEnd={(e) => handleEnd(e.changedTouches[0].clientX)}
             onTouchMove={(e) => handleMove(e.touches[0].clientX)}
             onMouseDown={(e) => handleStart(e.clientX)}
             onMouseUp={(e) => handleEnd(e.clientX)}
             onMouseMove={(e) => handleMove(e.clientX)}
         >
-            <ThemeProvider theme={theme}>
-                <CssBaseline />
-                <div>
-                {
-                    loaded && users && (
-                        <Card sx={{ width: 345 }} id="swipe-card">
-                            <CardMedia
-                                sx={{ height: 350 }}
-                                image={users[userIndex].imageUrl}
-                                title={users[userIndex].name}
-                                component='img'
-                                draggable={false}
-                            />
-                            <CardActionArea>
-                                <CardContent>
-                                    <Typography gutterBottom variant="h5" component="h2">
-                                        {users[userIndex].name}
-                                    </Typography>
-                                </CardContent>
-                            </CardActionArea>
-                        </Card>
-                        )
-                }
-                {
-                    loaded && !users && (
-                        <Typography>You've swiped on all users!</Typography>
+            <div>
+            {
+                loaded && users && (
+                    <Card sx={{ width: 345, cursor: "pointer" }} id="swipe-card">
+                        <CardMedia
+                            sx={{ height: 350 }}
+                            image={users[userIndex].imageUrl}
+                            title={users[userIndex].name}
+                            component='img'
+                            draggable={false}
+                        />
+                        <CardActionArea>
+                            <CardContent>
+                                <Typography gutterBottom variant="h5" component="h2">
+                                    {users[userIndex].name}
+                                </Typography>
+                            </CardContent>
+                        </CardActionArea>
+                    </Card>
                     )
-                }
-                </div>
-            </ThemeProvider>
+            }
+            {
+                loaded && !users && (
+                    <Typography>You've swiped on all users!</Typography>
+                )
+            }
+            {
+                <Box sx={theme => ({
+                    position: "absolute",
+                    zIndex: theme.zIndex.fab,
+                    left: 0, right: 0,
+                    top: 0, bottom: 0,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center"
+                })}>
+                    <Box ref={swipeIconRef}
+                        style={{ transform: `scale(0%)` }}
+                        sx={theme => ({
+                            transition: theme.transitions.create('transform', {
+                                duration: "0.05s",
+                                easing: theme.transitions.easing.linear,
+                            })
+                        })}
+                    >
+                        { swipingRight
+                            ? <HeartIcon sx={{ fontSize: "64px" }}></HeartIcon>
+                            : <SentimentVeryDissatisfiedIcon sx={{ fontSize: "64px" }}></SentimentVeryDissatisfiedIcon>
+                        }
+                    </Box>
+                </Box>
+            }
+            </div>
         </div>
     );
 }
