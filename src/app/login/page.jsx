@@ -23,17 +23,19 @@ export default function Login(){
 	>
 		<Typography variant="h1" mb={4}>Login</Typography>
 		<Stack direction="column" gap={2}>
-			<TextField variant="outlined" required
-				id="email" name="email" type="email"
-				label="UCLA Email"
-			/>
-			<TextField variant="outlined" required
-				id="password" name="password" type="password"
-				label="Password"
-				inputProps={{
-					minLength: 6,
-				}}
-			/>
+			<Stack direction="column" gap={1}>
+				<TextField variant="outlined" required
+					id="email" name="email" type="email"
+					label="UCLA Email"
+				/>
+				<TextField variant="outlined" required
+					id="password" name="password" type="password"
+					label="Password"
+					inputProps={{
+						minLength: 6,
+					}}
+				/>
+			</Stack>
 			<Button
 				type="submit"
 				variant="contained"
