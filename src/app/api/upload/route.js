@@ -41,5 +41,27 @@ export async function POST(request){
 		return error(insertError.code, 500);
 	}
 
+	const { data: selectData } = await supabase.from("UserImages")
+		.select("path")
+		.eq("user_id", user.auth.id)
+		.neq("path", guid);
+
+	const imageDeleteResponse = await supabase.storage.from("images")
+		.remove(selectData.map(({ path }) => `${path}.jpg`));
+
+
+	console.log(selectData.map(({ path }) => `${path}`));
+	console.log(imageDeleteResponse);
+
+	// Only delete from userimages if deleted from storage
+	// Also note that this could cause a race condition where if a user uploads two images
+	// then the former might be deleted withotu being deleted from images
+	if(!imageDeleteResponse.error){
+		const {} = await supabase.from("UserImages")
+			.delete()
+			.eq("user_id", user.auth.id)
+			.neq("path", guid);
+	}
+
 	return ok(guid, 201);
 }

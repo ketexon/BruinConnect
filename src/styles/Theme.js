@@ -1,6 +1,6 @@
 import { createTheme, responsiveFontSizes } from "@mui/material/styles";
 
-import { pink, red } from '@mui/material/colors';
+import { pink, red, lightGreen } from '@mui/material/colors';
 
 export default responsiveFontSizes(createTheme({
 	palette: {
@@ -11,6 +11,9 @@ export default responsiveFontSizes(createTheme({
 		secondary: {
 			main: pink[300],
 		},
+		success: {
+			main: lightGreen[500]
+		}
 	},
 	typography: {
 		h1: {
