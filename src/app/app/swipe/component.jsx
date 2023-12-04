@@ -107,8 +107,9 @@ const SwipePage = ({ similar_users, userId }) => {
     React.useEffect(() => {
         const diffX = endX - startX;
 
-        if (!users || users.length === 0) return;
-        
+        if (!users || users.length === 0) {
+            return;
+        }
         // Get current user data
         const currentUser = users[userIndex];   //this is the profile of the 
 
@@ -151,6 +152,7 @@ const SwipePage = ({ similar_users, userId }) => {
                                 image={users[userIndex].imageUrl}
                                 title={users[userIndex].name}
                                 component='img'
+                                draggable={false}
                             />
                             <CardActionArea>
                                 <CardContent>
