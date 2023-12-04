@@ -65,7 +65,7 @@ export default function Matches({ matchData }) {
                         ),
                     }}
                 ></TextField>
-                <Stack spacing={2} alignItems="stretch">
+                <Stack spacing={2} alignItems="stretch" sx={{ pb: 10 }}>
                     {profiles}
                 </Stack>
             </Stack>
@@ -83,7 +83,7 @@ function Profile({ data, images }) {
                 title="Name"
             />
             <CardContent>
-                <Typography gutterBottom variant="h5" component="div">
+                <Typography variant="h3" component="div">
                     {data.FirstName} {data.LastName}
                 </Typography>
                 {/* <Typography variant="body2" color="text.secondary">
@@ -106,9 +106,7 @@ function Profile({ data, images }) {
                 <Button size="small" component={Link} href={`/app/${data.UserUID}/profile`}>View Profile</Button>
             </CardActions>
             <CardActions>
-                <Button>
-                    <Avatar src={'/SnapchatLogo.png'} variant="square" />
-                </Button>
+                <Avatar src={'/SnapchatLogo.png'} variant="square" />
                 <Typography gutterBottom variant="h5" component="div">
                     {data.Snap}
                 </Typography>
