@@ -17,5 +17,5 @@ export async function POST(request) {
 		password,
 	})
 
-	return Response.redirect(`${origin}/`)
+	return Response.redirect(`${origin}/app`)
 }
