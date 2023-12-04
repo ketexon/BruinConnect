@@ -9,6 +9,7 @@ import { SwitchTransition, CSSTransition } from "react-transition-group";
 import "./styles.css"
 
 import createBrowserClient from '~/auth/createBrowserClient';
+import useSupabase from '~/auth/useSupabase';
 
 
 function QuestionText({ text }) {
@@ -48,13 +49,13 @@ function ButtonGrid({ onButtonClick }) {
 
 
 export default function ({ user_id }) {
-	const supabase = createBrowserClient();
+	const supabase = useSupabase();
 
 	const [questions, setQuestions] = useState({});
 	const [currQuestionId, setCurrQuestionId] = useState(-1);
 	const [allQuestionsAnswered, setAllQuestionsAnswered] = useState(false);
 	const initialRender = useRef(true);
-	
+
 	// Two refs are used, with each one representing a different copy of the
 	// window during the transition. The two take turns being the "active" window.
 	// Here, we use separate state variables to track the text in each one.
@@ -70,6 +71,7 @@ export default function ({ user_id }) {
 
 	// Initialize questions. Use useEffect so it runs on initialization
 	useEffect(() => {
+		if(supabase === null) return;
 		const fetchData = async () => {
 			try {
 				// Get all questions, joining with Responses table on user_id
@@ -102,9 +104,9 @@ export default function ({ user_id }) {
 				console.log(error);
 			}
 		};
-		
+
 		fetchData();
-	}, []);
+	}, [supabase]);
 
 
 	// Change question

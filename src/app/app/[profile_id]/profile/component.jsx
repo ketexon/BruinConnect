@@ -16,17 +16,18 @@ import 'react-edit-text/dist/index.css';
 import createBrowserClient from '~/auth/createBrowserClient';
 import zIndex from '@mui/material/styles/zIndex';
 
+import useSupabase from '~/auth/useSupabase';
 
 // export const metadata = {
 //     title: 'BruinConnect | Profile',
 // }
-function ProfilePicture() {
+function ProfilePicture({ image }) {
 	return (
 		<div style={{
 			display: "flex",
 			justifyContent: "center",
 		}}>
-			<Image src="/default_pfp.jpg" className="circle" width="400" height="400"
+			<Image src={image} className="circle" width="400" height="400"
 			/>
 		</div >
 	)
@@ -65,21 +66,27 @@ function DescriptionEditor(initial_description) {
 }
 
 
-export default function ({ user_id }) {
+export default function ({ profile_id }) {
 	const supabase = createBrowserClient();
 	const [firstName, setFirstName] = useState();
 	const [lastName, setLastName] = useState();
+	const [profileImage, setProfileImage] = useState();
 
 	const handleDescriptionSave = (newValue) => {
-		supabase.from("Users").update({ description: newValue }).eq({ UserUID: user_id })
+		supabase.from("Users").update({ description: newValue }).eq({ UserUID: profile_id })
 	}
 
 	useEffect(() => {
+		if (supabase === null) return;
 		const fetchData = async () => {
 			try {
-				const { data: data } = await supabase.from('Users').select('*').eq('UserUID', user_id);
+				const { data: data } = await supabase.from('Users').select('*').eq('UserUID', profile_id);
 				setFirstName(data[0].FirstName);
 				setLastName(data[0].LastName);
+
+				const { data: path } = await supabase.from('UserImages').select('path').eq('user_id', profile_id).limit(1);
+				const imageUrl = path.length ? supabase.storage.from("images").getPublicUrl(path[0].path).data.publicUrl : "";
+				setProfileImage(imageUrl);
 
 			} catch (error) {
 				console.log(error);
@@ -87,7 +94,7 @@ export default function ({ user_id }) {
 		};
 
 		fetchData();
-	}, []);
+	}, [supabase]);
 
 	return (
 		<>
@@ -100,10 +107,10 @@ export default function ({ user_id }) {
 				justifyContent: 'center',
 			}}>
 
-				<ProfilePicture /> <EditButton />
+				<ProfilePicture image={profileImage} /> <EditButton />
 				<h1>{firstName} {lastName}</h1>
 
-				<DescriptionEditor onClick={handleDescriptionSave} />
+				<DescriptionEditor onClick={() => handleDescriptionSave("My new description")} />
 
 			</MUIContainer>
 
