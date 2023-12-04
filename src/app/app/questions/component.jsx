@@ -95,7 +95,7 @@ export default function ({ user_id }) {
 				);
 
 				// set questions
-				if (Object.keys(unanswered_questions).length === 0)
+				if (Object.keys(unanswered_questions).length === 0) 
 					setAllQuestionsAnswered(true);
 				else
 					setQuestions(unanswered_questions);
@@ -143,7 +143,7 @@ export default function ({ user_id }) {
 	};
 
 	// React magic so it doesn't render differently on client and server
-	useEffect(changeQuestionNum, [questions]);
+	useEffect(changeQuestionNum, [questions, allQuestionsAnswered]);
 
 
 	// Store answer and change question
