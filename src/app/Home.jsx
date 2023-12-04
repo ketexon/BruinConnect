@@ -1,15 +1,46 @@
 "use client";
 
 import Container from "~/components/Container"
-import Box from "@mui/material/Box"
 import Stack from "@mui/material/Stack"
 
 import Button from "@mui/material/Button"
+import Paper from "@mui/material/Paper"
 
 import TitleGradient from "./TitleGradient"
 
 import Link from "next/link"
 import React from "react";
+import HomeBackground from "./HomeBackground";
+
+import Carousel from "react-material-ui-carousel"
+
+const CAROUSEL_IMAGES = [
+	{ img: "/home-carousel/1.jpg", objectPosition: "right" },
+	{ img: "/home-carousel/2.jpg" },
+]
+
+/**
+ * @param {Object} param0
+ * @param {string | undefined} param0.img
+ * @param {string | undefined} param0.objectPosition
+ * @returns
+ */
+function CarouselItem({ img, objectPosition }){
+	return <Paper sx={{
+		width: "100%",
+		height: "min-content",
+		overflow: "clip",
+	}}>
+		{ img && <img src={img} alt="" draggable={false} style={{
+			width: "100%",
+			aspectRatio: "1",
+			minWidth: "0",
+			minHeight: "0",
+			objectFit: "cover",
+			objectPosition: objectPosition ?? "center",
+		}}></img>}
+	</Paper>
+}
 
 /**
  * @param {{ loggedIn: bool }} param0
@@ -17,27 +48,31 @@ import React from "react";
  */
 
 export default function Home({ loggedIn }){
+
+
 	return <Container sx={(theme) => ({
 		minHeight: "100vh",
-		pt: 4
+		pt: 4,
+		position: "relative",
+		overflow: "clip",
 	})}>
 		<TitleGradient/>
-		<Box sx={{
-			position: "absolute",
-			top: 0, left: 0,
-			width: "100%",
-			aspectRatio: "0.33",
-			background: `radial-gradient(circle at top left, rgba(236,64,122,0.20) 0%, rgba(0,0,0,0) 25%, rgba(0,0,0,0) 100%);`,
-		}}/>
-		<Box sx={{
-			position: "absolute",
-			top: 0, left: 0,
-			width: "100%",
-			aspectRatio: "0.33",
-			background: `radial-gradient(circle at center right, rgba(244,67,54,0.20) 0%, rgba(0,0,0,0) 50%, rgba(0,0,0,0) 100%);`,
-			backgroundSize: "contain",
-			backgroundRepeat: "no-repeat",
-		}}/>
+		<HomeBackground/>
+
+		<Carousel
+			swipe
+			autoPlay
+			sx={{
+				alignSelf: "stretch",
+				userSelect: "none",
+				cursor: "pointer",
+				mb: 2
+			}}
+			height={"fit-content"}
+		>
+			{CAROUSEL_IMAGES.map(entry => <CarouselItem key={entry.img} {...entry}/>)}
+		</Carousel>
+
 		<Stack direction="column" alignItems="center">
 			<Stack alignItems="stretch" gap={1}>
 				{!loggedIn && <><Button variant="outlined" size="large"
