@@ -18,19 +18,6 @@ const theme = createTheme({
   },
 });
 
-const logUserSwipe = async (userId, otherId, rightSwipe) => {
-    try {
-        const { data, error } = await supabase
-            .from('UserSwipes')
-            .insert([
-                { user_id: userId, other_id: otherId, right: rightSwipe },
-            ]);
-        if(error) console.error("Error inserting swipe:", error);
-    } catch (error) {
-        console.error("Unexpected error:", error);
-    }
-};
-
 
 const SwipePage = ({ similar_users, userId }) => {
     const supabase = useSupabase();
@@ -40,6 +27,20 @@ const SwipePage = ({ similar_users, userId }) => {
     const [isDragging, setIsDragging] = React.useState(false);
     const [userIndex, setUserIndex] = React.useState(0);
     const [users, setUsers] = React.useState(null);
+    const [loaded, setLoaded] = React.useState(false);
+
+    const logUserSwipe = async (userId, otherId, rightSwipe) => {
+        try {
+            const { data, error } = await supabase
+                .from('UserSwipes')
+                .insert([
+                    { user_id: userId, other_id: otherId, right: rightSwipe },
+                ]);
+            if(error) console.error("Error inserting swipe:", error);
+        } catch (error) {
+            console.error("Unexpected error:", error);
+        }
+    };
 
     React.useEffect(() => {
         if(supabase === null) return;
@@ -63,6 +64,7 @@ const SwipePage = ({ similar_users, userId }) => {
                     const imageUrl = path.length ? supabase.storage.from("images").getPublicUrl(path[0].path).data.publicUrl : "";
 
                     userData.push({
+                        UserUID: user.UserUID,
                         name: user.FirstName + ' ' + user.LastName,
                         imageUrl: imageUrl
                     });
@@ -70,6 +72,7 @@ const SwipePage = ({ similar_users, userId }) => {
 
                 // set user data
                 setUsers(userData); 
+                setLoaded(true);
             }
             catch (error) {
                 console.log('Failed to fetch user data:', error);
@@ -111,14 +114,14 @@ const SwipePage = ({ similar_users, userId }) => {
             return;
         }
         // Get current user data
-        const currentUser = users[userIndex];   //this is the profile of the 
+        const currentUser = users[userIndex];
 
         if (diffX > 50) {
-            console.log('Swipe right, now showing user #' + userIndex); // positive value means swipe right
+            // console.log('Swipe right, now showing user #' + userIndex); // positive value means swipe right
             logUserSwipe(userId, currentUser.UserUID, true);
         }
         else if (diffX < -50) {
-            console.log('Swipe left, now showing user #' + userIndex); // negative value means swipe left
+            // console.log('Swipe left, now showing user #' + userIndex); // negative value means swipe left
             logUserSwipe(userId, currentUser.UserUID, false);
         }
         else
@@ -126,9 +129,8 @@ const SwipePage = ({ similar_users, userId }) => {
 
         if (userIndex+1 < users.length)
             setUserIndex(prev => prev + 1);
-        else {
-            // show some text or something here
-        }
+        else
+            setUsers(null);
         
     }, [endX]);
 
@@ -145,7 +147,7 @@ const SwipePage = ({ similar_users, userId }) => {
                 <CssBaseline />
                 <div>
                 {
-                    users && (
+                    loaded && users && (
                         <Card sx={{ width: 345 }} id="swipe-card">
                             <CardMedia
                                 sx={{ height: 350 }}
@@ -163,6 +165,11 @@ const SwipePage = ({ similar_users, userId }) => {
                             </CardActionArea>
                         </Card>
                         )
+                }
+                {
+                    loaded && !users && (
+                        <Typography>You've swiped on all users!</Typography>
+                    )
                 }
                 </div>
             </ThemeProvider>
