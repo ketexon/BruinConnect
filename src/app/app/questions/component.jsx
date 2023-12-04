@@ -9,6 +9,7 @@ import { SwitchTransition, CSSTransition } from "react-transition-group";
 import "./styles.css"
 
 import useSupabase from '~/auth/useSupabase';
+import Container from '~/components/Container';
 
 
 function QuestionText({ text }) {
@@ -94,7 +95,7 @@ export default function ({ user_id }) {
 				);
 
 				// set questions
-				if (Object.keys(unanswered_questions).length === 0) 
+				if (Object.keys(unanswered_questions).length === 0)
 					setAllQuestionsAnswered(true);
 				else
 					setQuestions(unanswered_questions);
@@ -173,33 +174,35 @@ export default function ({ user_id }) {
 
 
 	return (
-        <SwitchTransition>
-			<CSSTransition
-				key={refOneIsActive}
-				nodeRef={nodeRef}
-				addEndListener={(done) => {
-					nodeRef.current.addEventListener("transitionend", done, false);
-				}}
-				classNames="fade"
-			>
-				<div ref={nodeRef}>
-					<QuestionText text={refOneIsActive ? refOneQuestion : refTwoQuestion}/>
+		<Container sx={{ overflow: "visible"}}>
+			<SwitchTransition>
+				<CSSTransition
+					key={refOneIsActive}
+					nodeRef={nodeRef}
+					addEndListener={(done) => {
+						nodeRef.current.addEventListener("transitionend", done, false);
+					}}
+					classNames="fade"
+				>
+					<div ref={nodeRef}>
+						<QuestionText text={refOneIsActive ? refOneQuestion : refTwoQuestion}/>
 
-					<ButtonGrid onButtonClick={handleButtonClick}/>
+						<ButtonGrid onButtonClick={handleButtonClick}/>
 
-					<Stack direction="row" justifyContent="space-between" sx={{ mx: 4 }}>
-						<Typography>Strongly Disagree</Typography>
-						<Typography sx={{ textAlign: 'right' }}>Strongly Agree</Typography>
-					</Stack>
+						<Stack direction="row" justifyContent="space-between" sx={{ mx: 4 }}>
+							<Typography>Strongly Disagree</Typography>
+							<Typography sx={{ textAlign: 'right' }}>Strongly Agree</Typography>
+						</Stack>
 
-					<Grid container justifyContent="flex-end">
-						<Button variant="text" endIcon={<FastForwardIcon />} sx={{ mx: 5, mt: 8, py: 1.5 }}
-								size="large" onClick={() => handleButtonClick(null)}>
-							<Typography variant='h5'>SKIP</Typography>
-						</Button>
-					</Grid>
-				</div>
-			</CSSTransition>
-        </SwitchTransition>
+						<Grid container justifyContent="flex-end">
+							<Button variant="text" endIcon={<FastForwardIcon />} sx={{ mx: 5, mt: 8, py: 1.5 }}
+									size="large" onClick={() => handleButtonClick(null)}>
+								<Typography variant='h5'>SKIP</Typography>
+							</Button>
+						</Grid>
+					</div>
+				</CSSTransition>
+			</SwitchTransition>
+		</Container>
 	);
 }
