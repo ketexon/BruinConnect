@@ -46,7 +46,8 @@ export default async function (user_id) {
         // compute the similarity with all other users and sort descending on similarity
         const similar_users = Object.entries(user_vectors)
             .filter(([curr_id, ]) => curr_id !== user_id)
-            .sort(([, vectorA], [, vectorB]) => similarity(user_vector, vectorB) - similarity(user_vector, vectorA))
+            .map(([user_id, vector]) => [user_id, similarity(user_vector, vector)])
+            .sort(([, similarityA], [, similarityB]) => similarityB - similarityA)
             .map(([user_id, _]) => user_id);
 
         return similar_users;
