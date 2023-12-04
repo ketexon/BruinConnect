@@ -47,11 +47,12 @@ function EditButton() {
 	)
 }
 
-function DescriptionEditor({ initial_description, handleSave }) {
+function DescriptionEditor({ initial_description, handleSave, readonly }) {
 	const [description, setDescription] = useState({ initial_description });
 
 	return (
 		<EditText
+			readonly={readonly}
 			placeholder='Edit your description'
 			onSave={(newDescription) => handleSave(newDescription)}
 		/>
@@ -59,7 +60,7 @@ function DescriptionEditor({ initial_description, handleSave }) {
 }
 
 
-export default function ({ profile_id }) {
+export default function ({ user_id, profile_id }) {
 	const supabase = useSupabase();
 	const [firstName, setFirstName] = useState();
 	const [lastName, setLastName] = useState();
@@ -126,7 +127,7 @@ export default function ({ profile_id }) {
 				<ProfilePicture image={profileImage} /> <EditButton />
 				<h1>{firstName} {lastName}</h1>
 
-				<DescriptionEditor initial_description="" handleSave={handleSave} />
+				<DescriptionEditor initial_description="" handleSave={handleSave} readonly={user_id !== profile_id} />
 
 			</MUIContainer>
 
