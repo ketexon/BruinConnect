@@ -8,7 +8,7 @@ import Paper from "@mui/material/Paper";
 import BottomNavigation from "@mui/material/BottomNavigation";
 import BottomNavigationAction from "@mui/material/BottomNavigationAction";
 
-import HomeIcon from "@mui/icons-material/Home"
+import QuizIcon from '@mui/icons-material/Quiz';
 import MessageIcon from "@mui/icons-material/Message"
 import HeartIcon from "@mui/icons-material/Favorite"
 import ProfileIcon from "@mui/icons-material/AccountCircle"
@@ -30,9 +30,9 @@ const PAGES = [
 		icon: <MessageIcon />,
 	},
 	{
-		label: "Home",
-		url: "/app",
-		icon: <HomeIcon />,
+		label: "Questions",
+		url: "/app/questions",
+		icon: <QuizIcon />,
 	},
 	{
 		label: "Swipe",

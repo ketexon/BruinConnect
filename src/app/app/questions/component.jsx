@@ -8,7 +8,6 @@ import '@fontsource/roboto/300.css';
 import { SwitchTransition, CSSTransition } from "react-transition-group";
 import "./styles.css"
 
-import createBrowserClient from '~/auth/createBrowserClient';
 import useSupabase from '~/auth/useSupabase';
 
 
