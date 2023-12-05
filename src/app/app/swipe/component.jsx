@@ -17,6 +17,8 @@ import HeartIcon from "@mui/icons-material/Favorite"
 import SentimentVeryDissatisfiedIcon from '@mui/icons-material/SentimentVeryDissatisfied';
 
 const SwipePage = ({ similar_users, userId }) => {
+    const SWIPE_THRESHOLD = 100;
+
     const supabase = useSupabase();
 
     const [startX, setStartX] = React.useState(0);
@@ -26,6 +28,7 @@ const SwipePage = ({ similar_users, userId }) => {
     const [users, setUsers] = React.useState(null);
     const [loaded, setLoaded] = React.useState(false);
     const [swipingRight, setSwipingRight] = React.useState(false);
+    const [swipedFully, setSwipedFully] = React.useState(false);
 
     const swipeIconRef = React.useRef();
 
@@ -115,9 +118,14 @@ const SwipePage = ({ similar_users, userId }) => {
 
             card.style.transform = `translateX(${moveDistance}px) rotate(${rotateAngle}deg)`;
 
-            const iconScale = Math.min(1, Math.abs(moveDistance) / 150);
+            const iconScale = Math.min(1, Math.abs(moveDistance) / SWIPE_THRESHOLD);
 
             swipeIconRef.current.style.transform = `scale(${iconScale * 100}%)`
+            
+            if (moveDistance >= SWIPE_THRESHOLD || moveDistance <= -SWIPE_THRESHOLD)
+                setSwipedFully(true);
+            else
+                setSwipedFully(false);
         }
     }
 
@@ -130,11 +138,11 @@ const SwipePage = ({ similar_users, userId }) => {
         // Get current user data
         const currentUser = users[userIndex];
 
-        if (diffX > 80) {
+        if (diffX > SWIPE_THRESHOLD) {
             // console.log('Swipe right, now showing user #' + userIndex); // positive value means swipe right
             logUserSwipe(userId, currentUser.UserUID, true);
         }
-        else if (diffX < -80) {
+        else if (diffX < -SWIPE_THRESHOLD) {
             // console.log('Swipe left, now showing user #' + userIndex); // negative value means swipe left
             logUserSwipe(userId, currentUser.UserUID, false);
         }
@@ -194,16 +202,18 @@ const SwipePage = ({ similar_users, userId }) => {
                 })}>
                     <Box ref={swipeIconRef}
                         style={{ transform: `scale(0%)` }}
-                        sx={theme => ({
-                            transition: theme.transitions.create('transform', {
-                                duration: "0.05s",
-                                easing: theme.transitions.easing.linear,
+                        sx={
+                            theme => ({
+                                transition: theme.transitions.create('transform', {
+                                    duration: "0.05s",
+                                    easing: theme.transitions.easing.linear,
+                                })
                             })
-                        })}
+                        }
                     >
                         { swipingRight
-                            ? <HeartIcon sx={{ fontSize: "64px" }}></HeartIcon>
-                            : <SentimentVeryDissatisfiedIcon sx={{ fontSize: "64px" }}></SentimentVeryDissatisfiedIcon>
+                            ? <HeartIcon sx={{ fontSize: "64px", color: swipedFully ? "#D93909" : "white" }}></HeartIcon>
+                            : <SentimentVeryDissatisfiedIcon sx={{ fontSize: "64px", color: swipedFully ? "#194FFF" : "white" }}></SentimentVeryDissatisfiedIcon>
                         }
                     </Box>
                 </Box>
