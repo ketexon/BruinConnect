@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from "next/server"
+import origin from "~/origin";
 
 /**
  * @param {NextRequest} req
  * @returns {NextResponse}
  */
 export function GET(req){
-	console.log("BRUINCONNECT LOG:", req.nextUrl.origin);
-	return NextResponse.redirect(`${req.nextUrl.origin}/app/swipe`, {
+	return NextResponse.redirect(`${origin}/app/swipe`, {
 		status: 308
 	})
 }

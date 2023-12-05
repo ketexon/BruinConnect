@@ -1,4 +1,5 @@
 import createServerClient from "~/auth/createServerClient"
+import origin from "~/origin";
 
 /**
  *
@@ -6,8 +7,6 @@ import createServerClient from "~/auth/createServerClient"
  * @returns {import("next/server").NextResponse}
  */
 export async function GET(request) {
-	const { origin } = request.nextUrl;
-
 	const supabase = createServerClient();
 	await supabase.auth.signOut()
 

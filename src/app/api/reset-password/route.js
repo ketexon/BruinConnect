@@ -1,11 +1,11 @@
 import createServerClient from "~/auth/createServerClient"
+import origin from "~/origin";
 
 /**
  * @param {import("next/server").NextRequest} request
  * @returns {import("next/server").NextRequest}
  */
 export async function POST(request){
-	const { origin } = request.nextUrl;
 	const supabase = createServerClient();
 
 	const formData = await request.formData();

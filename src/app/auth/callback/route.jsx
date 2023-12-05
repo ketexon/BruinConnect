@@ -1,5 +1,6 @@
 import createServerClient from "~/auth/createServerClient"
 import { NextResponse } from 'next/server'
+import origin from "~/origin";
 
 export async function GET(request) {
   const requestUrl = new URL(request.url);
@@ -11,5 +12,5 @@ export async function GET(request) {
     await supabase.auth.exchangeCodeForSession(code);
   }
 
-  return NextResponse.redirect(next ?? `${requestUrl.origin}/app`)
+  return NextResponse.redirect(next ?? `${origin}/app`)
 }
