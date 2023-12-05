@@ -6,6 +6,9 @@ import origin from "~/origin";
  * @returns {NextResponse}
  */
 export function GET(req){
+	console.log('BRUINCONNECT LOG:', origin);
+	console.log('BRUINCONNECT LOG:', process.env.URL);
+	console.log('BRUINCONNECT LOG:', process.env.DEPLOY_URL);
 	return NextResponse.redirect(`${origin}/app/swipe`, {
 		status: 308
 	})
