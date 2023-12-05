@@ -54,39 +54,52 @@ export default function Matches({ matchData }) {
                 >
                     <Typography variant="h1" mb={4}>Your Matches</Typography>
                 </div>
-                {hasMatches
-                ?
-                <Stack direction="column" alignItems="stretch">
-                <TextField
-                    label="Search"
-                    value={search}
-                    sx={{ mb: 2 }}
-                    onChange={(e) => { setSearch(e.target.value) }}
-                    InputProps={{
-                        startAdornment: (
-                            <InputAdornment position="start">
-                                <SearchIcon />
-                            </InputAdornment>
-                        ),
-                    }}
-                ></TextField>
-                <Stack spacing={2} alignItems="stretch" sx={{ pb: 10 }}>
-                    {profiles}
-                </Stack>
-                </Stack>
+                {
+                hasMatches ?
+                    <Stack direction="column" alignItems="stretch">
+                    <TextField
+                        label="Search"
+                        value={search}
+                        sx={{ mb: 2 }}
+                        onChange={(e) => { setSearch(e.target.value) }}
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <SearchIcon />
+                                </InputAdornment>
+                            ),
+                        }}
+                    ></TextField>
+                    {
+                    Object.keys(profiles).length !== 0 ? 
+                        <Stack spacing={2} alignItems="stretch" sx={{ pb: 10 }}>
+                            {profiles}
+                        </Stack>
+                    :
+                        <div
+                            style={{
+                                display: "flex",
+                                justifyContent: "center",
+                            }}
+                        >
+                            <Typography> Your search did not match any users.</Typography>
+                            
+                        </div>
+                    }
+                    </Stack>
                 : 
-                <Stack direction="column" alignItems="stretch">
-                <div
-                    style={{
-                        display: "flex",
-                        justifyContent: "center",
-                    }}
-                >
-                    <Typography variant="h5"> You have no matches. Keep swiping!</Typography>
-                    
-                </div>
-                <Button sx= {{margin:3 }} size="small" component={Link} href={`/app/swipe`}>Swipe Page</Button>
-                </Stack>
+                    <Stack direction="column" alignItems="stretch">
+                        <div
+                            style={{
+                                display: "flex",
+                                justifyContent: "center",
+                            }}
+                        >
+                            <Typography variant="h5"> You have no matches. Keep swiping!</Typography>
+                            
+                        </div>
+                        <Button sx= {{margin:3 }} variant="outlined" size="large" component={Link} href={`/app/swipe`}>Swipe Page</Button>
+                    </Stack>
             }
             </Stack>    
         </Container>
