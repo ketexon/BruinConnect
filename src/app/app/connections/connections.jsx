@@ -18,12 +18,12 @@ import InputAdornment from "@mui/material/InputAdornment"
 import SearchIcon from "@mui/icons-material/Search"
 
 /**
- * 
- * @param {{ matchData: import("~/auth/getUser").User[] }} param0 
- * @returns 
+ *
+ * @param {{ matchData: import("~/auth/getUser").User[] }} param0
+ * @returns
  */
 export default function Matches({ matchData }) {
-    // const filteredMatchData = 
+    // const filteredMatchData =
     const [search, setSearch] = React.useState("");
 
     const [filteredMatchData, setFilteredMatchData] = React.useState(matchData);
@@ -41,7 +41,7 @@ export default function Matches({ matchData }) {
         )
     }, [search])
 
-    const hasMatches = (profiles.length !== 0);
+    const hasMatches = (matchData.length !== 0);
 
 
     return (
@@ -56,7 +56,7 @@ export default function Matches({ matchData }) {
                     <Typography variant="h1" mb={4}>Your Matches</Typography>
                 </div>
                 {hasMatches
-                ? 
+                ?
                 <Stack direction="column" alignItems="stretch">
                 <TextField
                     label="Search"
@@ -75,7 +75,7 @@ export default function Matches({ matchData }) {
                     {profiles}
                 </Stack>
                 </Stack>
-                : 
+                :
                 <div
                     style={{
                         display: "flex",
