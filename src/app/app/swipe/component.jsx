@@ -159,7 +159,7 @@ const SwipePage = ({ similar_users, userId }) => {
         >
             <div>
             {
-                loaded && users && (
+                loaded && (users ? (
                     <Card sx={{ width: 345, cursor: "pointer" }} id="swipe-card">
                         <CardMedia
                             sx={{ height: 350 }}
@@ -176,11 +176,9 @@ const SwipePage = ({ similar_users, userId }) => {
                             </CardContent>
                         </CardActionArea>
                     </Card>
+                    ) : (
+                        <Typography>You've swiped on all users!</Typography>
                     )
-            }
-            {
-                loaded && !users && (
-                    <Typography>You've swiped on all users!</Typography>
                 )
             }
             {

@@ -1,3 +1,5 @@
+import "server-only"
+
 import createServerClient from "~/auth/createServerClient"
 import Home from "./Home"
 import getUser from "~/auth/getUser";

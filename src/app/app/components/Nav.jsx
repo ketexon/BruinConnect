@@ -13,6 +13,8 @@ import MessageIcon from "@mui/icons-material/Message"
 import HeartIcon from "@mui/icons-material/Favorite"
 import ProfileIcon from "@mui/icons-material/AccountCircle"
 
+import { usePathname } from "next/navigation";
+
 /**
  * @typedef {Object} Page
  * @property {string} label
@@ -49,11 +51,11 @@ const PAGES = [
 ]
 
 export default function Nav() {
-	const [value, setValue] = React.useState(null)
-
-	React.useEffect(() => {
-		setValue(Math.max(PAGES.findIndex(({ urlMatch, url }) => urlMatch ? urlMatch(window.location.pathname) : url === window.location.pathname), 0));
-	}, [])
+	const pathname = usePathname();
+	const value = React.useMemo(() => {
+		const index = PAGES.findIndex(({ urlMatch, url }) => urlMatch ? urlMatch(pathname) : url === pathname);
+		return index < 0 ? undefined : index;
+	});
 
 	return (
 		<Paper sx={theme => ({
@@ -64,7 +66,6 @@ export default function Nav() {
 			<BottomNavigation
 				showLabels
 				value={value}
-				onChange={(e, newValue) => void (setValue(newValue))}
 			>
 				{PAGES.map(({ label, url, icon }, i) => (
 					<BottomNavigationAction
