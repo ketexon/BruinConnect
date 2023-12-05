@@ -191,7 +191,8 @@ const SwipePage = ({ similar_users, userId }) => {
                     top: 0, bottom: 0,
                     display: "flex",
                     alignItems: "center",
-                    justifyContent: "center"
+                    justifyContent: "center",
+                    pointerEvents: "none",
                 })}>
                     <Box ref={swipeIconRef}
                         style={{ transform: `scale(0%)` }}
