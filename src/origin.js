@@ -1,1 +1,1 @@
-export default process.env.NEXT_PUBLIC_ORIGIN ?? "http://localhost:3000"
+export default process.env.NEXT_PUBLIC_ORIGIN ?? process.env.URL ?? "http://localhost:3000"
