@@ -1,21 +1,16 @@
 "use client";
-// /** @type {import("next").Metadata} */
 
 import React from 'react';
-import { Avatar, Typography, Box, Grid, Paper, IconButton } from '@mui/material';
 import Image from 'next/image'
-import EditIcon from '@mui/icons-material/Edit';
 import { useState, useEffect } from 'react';
 import MUIContainer, { ContainerProps } from "@mui/material/Container"
 import styles from './styles.css';
-import { EditText, EditTextarea } from 'react-edit-text';
+import { EditText } from 'react-edit-text';
 import 'react-edit-text/dist/index.css';
 import ImageUpload from '~/components/ImageUpload'
 
-import createBrowserClient from '~/auth/createBrowserClient';
-import zIndex from '@mui/material/styles/zIndex';
-
 import useSupabase from '~/auth/useSupabase';
+import Container from '~/components/Container';
 
 // export const metadata = {
 //     title: 'BruinConnect | Profile',
@@ -52,9 +47,14 @@ function DescriptionEditor({ initial_description, handleSave, readonly }) {
 	);
 }
 
-
-export default function ({ user_id, profile_id, user }) {
+/**
+ * @param {Object} param0
+ * @param {import("~/auth/getOtherUser").OtherUser} param0.user
+ * @returns
+ */
+export default function ({ user, editable }) {
 	const supabase = useSupabase();
+
 	const firstName = user.data.FirstName;
 	const lastName = user.data.LastName;
 	const description = user.data.description;
@@ -72,7 +72,7 @@ export default function ({ user_id, profile_id, user }) {
 			const { data, error } = await supabase
 				.from('Users')
 				.update({ description: newValue.value })
-				.eq('UserUID', profile_id);
+				.eq('UserUID', user);
 		} catch (error) {
 			console.log(error);
 		}
@@ -80,7 +80,8 @@ export default function ({ user_id, profile_id, user }) {
 
 	return (
 		<>
-			<MUIContainer sx={{
+			<Container sx={{
+				mt: 4,
 				position: 'relative',
 				display: 'flex',
 				flexDirection: 'column',
@@ -89,11 +90,11 @@ export default function ({ user_id, profile_id, user }) {
 			}}>
 				<ProfilePicture image={profileImage} alt={`${firstName} ${lastName}'s profile photo`} />
 				{
-					user_id === profile_id && <ImageUpload onFileUpload={handleImageUpload} />
+					editable && <ImageUpload onFileUpload={handleImageUpload} />
 				}
 				<h1>{firstName} {lastName} </h1>
-				<DescriptionEditor initial_description={description} handleSave={handleSaveDescription} readonly={user_id !== profile_id} />
-			</MUIContainer>
+				<DescriptionEditor initial_description={description} handleSave={handleSaveDescription} readonly={!editable} />
+			</Container>
 
 		</>
 	);
