@@ -30,7 +30,7 @@ function CarouselItem({ img, objectPosition }){
 			aspectRatio: 1,
 			display: "grid",
 			gridTemplate: "1fr / 1fr",
-			padding: 2
+			mx: 2
 		}}
 	>
 		<Box sx={theme => ({
