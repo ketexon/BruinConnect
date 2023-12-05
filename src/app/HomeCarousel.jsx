@@ -3,10 +3,7 @@
 import Paper from "@mui/material/Paper"
 import Box from "@mui/material/Box"
 
-import Carousel from "react-material-ui-carousel"
 import React from "react";
-
-import { pink } from "@mui/material/colors"
 
 const CAROUSEL_IMAGES = [
 	{ img: "/home-carousel/1.jpg", objectPosition: "right" },
@@ -30,7 +27,7 @@ function CarouselItem({ img, objectPosition }){
 			aspectRatio: 1,
 			display: "grid",
 			gridTemplate: "1fr / 1fr",
-			padding: 2
+			mx: 2
 		}}
 	>
 		<Box sx={theme => ({
