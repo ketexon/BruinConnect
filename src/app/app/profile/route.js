@@ -12,7 +12,14 @@ export async function GET(req){
 	const res = new NextResponse();
 	const supabase = createServerClient({ req, res });
 	const user = await getUser(supabase);
-	return NextResponse.redirect(`${origin}/app/${user.data.UserUID}/profile`, {
-		status: 307
-	})
+	if(user?.data){
+		return NextResponse.redirect(`${origin}/app/${user.data.UserUID}/profile`, {
+			status: 307
+		})
+	}
+	else {
+		return NextResponse.redirect(`${origin}/login`, {
+			status: 307
+		})
+	}
 }
