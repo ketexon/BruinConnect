@@ -168,7 +168,7 @@ const SwipePage = ({ similar_users, userId }) => {
                             component='img'
                             draggable={false}
                         />
-                        <CardActionArea>
+                        <CardActionArea disableRipple disableTouchRipple disabled>
                             <CardContent>
                                 <Typography gutterBottom variant="h5" component="h2">
                                     {users[userIndex].name}
