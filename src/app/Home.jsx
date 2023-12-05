@@ -1,15 +1,17 @@
 "use client";
 
 import Container from "~/components/Container"
-import Box from "@mui/material/Box"
 import Stack from "@mui/material/Stack"
 
 import Button from "@mui/material/Button"
+import Paper from "@mui/material/Paper"
 
 import TitleGradient from "./TitleGradient"
 
 import Link from "next/link"
 import React from "react";
+import HomeBackground from "./HomeBackground";
+import HomeCarousel from "./HomeCarousel";
 
 /**
  * @param {{ loggedIn: bool }} param0
@@ -17,27 +19,21 @@ import React from "react";
  */
 
 export default function Home({ loggedIn }){
+
+
 	return <Container sx={(theme) => ({
 		minHeight: "100vh",
-		pt: 4
+		pt: 4,
+		position: "relative",
+		overflow: "clip",
+		display: "flex",
+		flexDirection: "column",
+		gap: 4
 	})}>
 		<TitleGradient/>
-		<Box sx={{
-			position: "absolute",
-			top: 0, left: 0,
-			width: "100%",
-			aspectRatio: "0.33",
-			background: `radial-gradient(circle at top left, rgba(236,64,122,0.20) 0%, rgba(0,0,0,0) 25%, rgba(0,0,0,0) 100%);`,
-		}}/>
-		<Box sx={{
-			position: "absolute",
-			top: 0, left: 0,
-			width: "100%",
-			aspectRatio: "0.33",
-			background: `radial-gradient(circle at center right, rgba(244,67,54,0.20) 0%, rgba(0,0,0,0) 50%, rgba(0,0,0,0) 100%);`,
-			backgroundSize: "contain",
-			backgroundRepeat: "no-repeat",
-		}}/>
+		<HomeBackground/>
+		<HomeCarousel/>
+
 		<Stack direction="column" alignItems="center">
 			<Stack alignItems="stretch" gap={1}>
 				{!loggedIn && <><Button variant="outlined" size="large"

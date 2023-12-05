@@ -40,7 +40,6 @@ export default function TitleGradient(){
 			color: "transparent",
 			fontSize: "3rem",
 			fontWeight: "bold",
-			mb: 4
 		})}
 		style={{
 			backgroundPosition: `${offset}px`
