@@ -6,12 +6,14 @@ import TextField from "@mui/material/TextField"
 import Typography from "@mui/material/Typography";
 import Container from "~/components/Container";
 import Stack from "@mui/material/Stack";
+import Alert from "@mui/material/Alert"
+import AlertTitle from "@mui/material/AlertTitle"
 
 import { redirect, useParams } from "next/navigation";
 
 import Link from "~/components/Link";
 
-export default function Signup(){
+export default function Signup({ searchParams: { err, success } }){
 	const params = useParams();
 	const error = params.error;
 
@@ -53,6 +55,10 @@ export default function Signup(){
 		action="/api/signup"
 	>
 		<Typography variant="h1" mb={4}>Sign Up</Typography>
+		{success==='' && <Alert color="success" sx={{ mb: 2 }}>
+			<AlertTitle>Success</AlertTitle>
+			Please check your email for a verification link
+		</Alert>}
 		<Stack direction="column" gap={2}>
 			<Stack direction="column" gap={1}>
 				<TextField variant="outlined" required
@@ -86,6 +92,7 @@ export default function Signup(){
 			>Submit</Button>
 			<Stack direction="column" alignItems="flex-start">
 				<Link href="/login">Login</Link>
+				<Link href="/reset-password">Reset Password</Link>
 			</Stack>
 		</Stack>
 	</Container>

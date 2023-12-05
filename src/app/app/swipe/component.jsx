@@ -50,31 +50,36 @@ const SwipePage = ({ similar_users, userId }) => {
         const fetchUserData = async () => {
             try {
                 // get data of similar users
-                const { data: users } = await supabase
-                    .from('Users')
-                    .select('*')
-                    .in('UserUID', similar_users);
-
-                // get image urls for each user
                 const userData = [];
-                for (const user of users) {
+
+                for (const userUID of similar_users) {
+
+                    // get user info
+                    const { data: user } = await supabase
+                        .from('Users')
+                        .select('*')
+                        .eq('UserUID', userUID);
+
+                    // get profile image
                     const { data: path } = await supabase
                         .from('UserImages')
                         .select('path')
-                        .eq('user_id', user.UserUID)
-                        .limit(1);
+                        .eq('user_id', userUID)
 
                     const imageUrl = path.length ? supabase.storage.from("images").getPublicUrl(path[0].path).data.publicUrl : "";
 
-                    userData.push({
-                        UserUID: user.UserUID,
-                        name: user.FirstName + ' ' + user.LastName,
-                        imageUrl: imageUrl
-                    });
-                };
+                    // Assuming UserUID is unique, so there should be at most one result
+                    if (user.length > 0) {
+                        userData.push({
+                            UserUID: user[0].UserUID,
+                            name: user[0].FirstName + ' ' + user[0].LastName,
+                            imageUrl: imageUrl
+                        });
+                    }
+                }
 
                 // set user data
-                if (users.length !== 0)
+                if (userData.length !== 0)
                     setUsers(userData);
                 setLoaded(true);
             }

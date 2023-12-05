@@ -3,8 +3,8 @@
 import React from 'react';
 import Image from 'next/image'
 import { useState, useEffect } from 'react';
-import MUIContainer, { ContainerProps } from "@mui/material/Container"
-import styles from './styles.css';
+import { Button } from '@mui/material';
+import './styles.css';
 import { EditTextarea } from 'react-edit-text';
 import 'react-edit-text/dist/index.css';
 import ImageUpload from '~/components/ImageUpload'
@@ -36,15 +36,16 @@ function DescriptionEditor({ initial_description, handleSave, readonly }) {
 
 	return (
 		<EditTextarea
-			rows={17}
+			rows={15}
 			readonly={readonly}
 			placeholder={placeholder}
 			defaultValue={initial_description}
 			onSave={(newDescription) => handleSave(newDescription)}
 			style={{
 				width: 300,
-				overflow: "visible",
-				fontSize: "1rem"
+				overflow: "hidden",
+				fontSize: "1rem",
+				backgroundColor: readonly ? "transparent" : ""
 			}}
 		/>
 	);
@@ -96,6 +97,9 @@ export default function ({ user, editable }) {
 					editable && <ImageUpload onFileUpload={handleImageUpload} />
 				}
 				<h1>{firstName} {lastName} </h1>
+				{
+					editable && <Button sx={{ mb: 3 }} variant="outlined" size="large" href="/logout">Logout</Button>
+				}
 				<DescriptionEditor initial_description={description} handleSave={handleSaveDescription}
 					readonly={!editable} />
 			</Container>

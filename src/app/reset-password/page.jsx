@@ -45,8 +45,8 @@ export default function ResetPassword({ searchParams: { error, success } }){
 				sx={{ alignSelf: "flex-start" }}
 			>Submit</Button>
 			<Stack direction="column" alignItems="flex-start">
+				<Link href="/login">Log in</Link>
 				<Link href="/signup">Sign up</Link>
-				<Link href="/reset-password">Reset password</Link>
 			</Stack>
 		</Stack>
 	</Container>
