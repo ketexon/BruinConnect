@@ -2,7 +2,6 @@
 
 import React from 'react';
 import Button from '@mui/material/Button';
-import Box from '@mui/material/Box'
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
@@ -75,7 +74,8 @@ export default function Matches({ matchData }) {
                     {profiles}
                 </Stack>
                 </Stack>
-                :
+                : 
+                <Stack direction="column" alignItems="stretch">
                 <div
                     style={{
                         display: "flex",
@@ -83,9 +83,12 @@ export default function Matches({ matchData }) {
                     }}
                 >
                     <Typography variant="h5"> You have no matches. Keep swiping!</Typography>
+                    
                 </div>
-                }
-            </Stack>
+                <Button sx= {{margin:3 }} size="small" component={Link} href={`/app/swipe`}>Swipe Page</Button>
+                </Stack>
+            }
+            </Stack>    
         </Container>
     );
 
