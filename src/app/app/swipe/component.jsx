@@ -116,7 +116,7 @@ const SwipePage = ({ similar_users, userId }) => {
             card.style.transform = `translateX(${moveDistance}px) rotate(${rotateAngle}deg)`;
 
             const iconScale = Math.min(1, Math.abs(moveDistance) / 150);
-            console.log(iconScale);
+
             swipeIconRef.current.style.transform = `scale(${iconScale * 100}%)`
         }
     }
