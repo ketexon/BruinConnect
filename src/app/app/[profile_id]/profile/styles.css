@@ -10,16 +10,16 @@
 
 }
 
-.editbutton {
-    height: 14px;
-    width: px;
-}
-
 .textInput {
-    width: 100%;
+    max-width: 100%;
     padding: 10px;
     border: 1px solid #dfdfdf;
     outline: none;
+    text-wrap: wrap;
+}
+
+.description {
+    text-wrap: wrap
 }
 
 body,

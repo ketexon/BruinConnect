@@ -41,7 +41,7 @@ function DescriptionEditor({ initial_description, handleSave, readonly }) {
 			defaultValue={initial_description}
 			onSave={(newDescription) => handleSave(newDescription)}
 			style={{
-				width: "100%"
+				width: "100%",
 			}}
 		/>
 	);
@@ -72,7 +72,7 @@ export default function ({ user, editable }) {
 			const { data, error } = await supabase
 				.from('Users')
 				.update({ description: newValue.value })
-				.eq('UserUID', user);
+				.eq('UserUID', user.data.UserUID);
 		} catch (error) {
 			console.log(error);
 		}
@@ -93,7 +93,8 @@ export default function ({ user, editable }) {
 					editable && <ImageUpload onFileUpload={handleImageUpload} />
 				}
 				<h1>{firstName} {lastName} </h1>
-				<DescriptionEditor initial_description={description} handleSave={handleSaveDescription} readonly={!editable} />
+				<DescriptionEditor initial_description={description} handleSave={handleSaveDescription}
+					readonly={!editable} />
 			</Container>
 
 		</>
