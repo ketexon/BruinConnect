@@ -5,7 +5,7 @@ import Image from 'next/image'
 import { useState, useEffect } from 'react';
 import MUIContainer, { ContainerProps } from "@mui/material/Container"
 import styles from './styles.css';
-import { EditText } from 'react-edit-text';
+import { EditTextarea } from 'react-edit-text';
 import 'react-edit-text/dist/index.css';
 import ImageUpload from '~/components/ImageUpload'
 
@@ -35,13 +35,16 @@ function DescriptionEditor({ initial_description, handleSave, readonly }) {
 	const placeholder = readonly ? "User has no description :(" : 'Tap to edit description';
 
 	return (
-		<EditText
+		<EditTextarea
+			rows={17}
 			readonly={readonly}
 			placeholder={placeholder}
 			defaultValue={initial_description}
 			onSave={(newDescription) => handleSave(newDescription)}
 			style={{
-				width: "100%",
+				width: 300,
+				overflow: "visible",
+				fontSize: "1rem"
 			}}
 		/>
 	);
