@@ -11,36 +11,7 @@ import TitleGradient from "./TitleGradient"
 import Link from "next/link"
 import React from "react";
 import HomeBackground from "./HomeBackground";
-
-import Carousel from "react-material-ui-carousel"
-
-const CAROUSEL_IMAGES = [
-	{ img: "/home-carousel/1.jpg", objectPosition: "right" },
-	{ img: "/home-carousel/2.jpg" },
-]
-
-/**
- * @param {Object} param0
- * @param {string | undefined} param0.img
- * @param {string | undefined} param0.objectPosition
- * @returns
- */
-function CarouselItem({ img, objectPosition }){
-	return <Paper sx={{
-		width: "100%",
-		height: "min-content",
-		overflow: "clip",
-	}}>
-		{ img && <img src={img} alt="" draggable={false} style={{
-			width: "100%",
-			aspectRatio: "1",
-			minWidth: "0",
-			minHeight: "0",
-			objectFit: "cover",
-			objectPosition: objectPosition ?? "center",
-		}}></img>}
-	</Paper>
-}
+import HomeCarousel from "./HomeCarousel";
 
 /**
  * @param {{ loggedIn: bool }} param0
@@ -55,23 +26,13 @@ export default function Home({ loggedIn }){
 		pt: 4,
 		position: "relative",
 		overflow: "clip",
+		display: "flex",
+		flexDirection: "column",
+		gap: 4
 	})}>
 		<TitleGradient/>
 		<HomeBackground/>
-
-		<Carousel
-			swipe
-			autoPlay
-			sx={{
-				alignSelf: "stretch",
-				userSelect: "none",
-				cursor: "pointer",
-				mb: 2
-			}}
-			height={"fit-content"}
-		>
-			{CAROUSEL_IMAGES.map(entry => <CarouselItem key={entry.img} {...entry}/>)}
-		</Carousel>
+		<HomeCarousel/>
 
 		<Stack direction="column" alignItems="center">
 			<Stack alignItems="stretch" gap={1}>
