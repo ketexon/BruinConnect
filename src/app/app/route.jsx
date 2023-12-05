@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from "next/server"
  * @returns {NextResponse}
  */
 export function GET(req){
-	console.log(req.nextUrl.origin);
+	console.log("BRUINCONNECT LOG:", req.nextUrl.origin);
 	return NextResponse.redirect(`${req.nextUrl.origin}/app/swipe`, {
 		status: 308
 	})
