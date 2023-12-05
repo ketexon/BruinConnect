@@ -6,7 +6,7 @@ import origin from "~/origin";
  * @returns {NextResponse}
  */
 export function GET(req){
-	return NextResponse.redirect(`${process.env.URL}/app/swipe`, {
+	return NextResponse.redirect(`${origin}/app/swipe`, {
 		status: 308
 	})
 }
