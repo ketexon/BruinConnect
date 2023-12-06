@@ -13,96 +13,115 @@ import Link from 'next/link';
 import { TextField } from '@mui/material';
 import Container from '~/components/Container';
 import InputAdornment from "@mui/material/InputAdornment"
-
 import SearchIcon from "@mui/icons-material/Search"
+
+import useSupabase from '~/auth/useSupabase';
+import fetchMatches from './fetchMatches';
+import ReactPullToRefresh from 'react-pull-to-refresh';
 
 /**
  *
  * @param {{ matchData: import("~/auth/getUser").User[] }} param0
  * @returns
  */
-export default function Matches({ matchData }) {
-    // const filteredMatchData =
+export default function Matches({ initialMatchData }) {
+    const supabase = useSupabase();
+
+    const [matchData, setMatchData] = React.useState(initialMatchData);
     const [search, setSearch] = React.useState("");
 
-    const [filteredMatchData, setFilteredMatchData] = React.useState(matchData);
+    const [filteredMatchData, setFilteredMatchData] = React.useState(initialMatchData);
 
     const profiles = filteredMatchData.map(({ data, images }) => <Profile key={data.UserUID} data={data} images={images} />);
+
+    React.useEffect(() => {
+        setFilteredMatchData(matchData);
+        setSearch(""); // clear search bar
+    }, [matchData]);
 
     React.useEffect(() => {
         setFilteredMatchData(
             matchData.filter(({ data: { FirstName, LastName, Snap } }) =>
                 `${FirstName} ${LastName}`
                     .toLowerCase()
-                    .includes(search)
-                || Snap.toLowerCase().includes(search)
+                    .includes(search.toLowerCase())
+                || Snap.toLowerCase().includes(search.toLowerCase())
             )
         )
-    }, [search])
+    }, [search]);
 
-    const hasMatches = (matchData.length !== 0);
+    const hasMatches = matchData.length > 0;
+    
+    const handleRefresh = async () => {
+        console.log(supabase == null);
+        if (supabase != null)
+            setMatchData(await fetchMatches(supabase));
+    }
 
 
     return (
-        <Container sx={{ pt: 2 }}>
-            <Stack direction="column" alignItems="stretch">
-                <div
-                    style={{
-                        display: "flex",
-                        justifyContent: "center",
-                    }}
-                >
-                    <Typography variant="h1" mb={4}>Your Matches</Typography>
-                </div>
-                {
-                hasMatches ?
-                    <Stack direction="column" alignItems="stretch">
-                    <TextField
-                        label="Search"
-                        value={search}
-                        sx={{ mb: 2 }}
-                        onChange={(e) => { setSearch(e.target.value) }}
-                        InputProps={{
-                            startAdornment: (
-                                <InputAdornment position="start">
-                                    <SearchIcon />
-                                </InputAdornment>
-                            ),
+        <ReactPullToRefresh onRefresh={handleRefresh}>
+            <Container sx={{ pt: 2 }}>
+                <Stack direction="column" alignItems="stretch">
+                    <div
+                        style={{
+                            display: "flex",
+                            justifyContent: "center",
                         }}
-                    ></TextField>
+                    >
+                        <Typography variant="h1" mb={4}>Your Matches</Typography>
+                    </div>
+                    {/* <Button onClick={handleRefresh}>Refresh</Button> */}
                     {
-                    Object.keys(profiles).length !== 0 ? 
-                        <Stack spacing={2} alignItems="stretch" sx={{ pb: 10 }}>
-                            {profiles}
+                    hasMatches ?
+                        <Stack direction="column" alignItems="stretch">
+                        <TextField
+                            label="Search"
+                            value={search}
+                            sx={{ mb: 2 }}
+                            onChange={(e) => { setSearch(e.target.value) }}
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position="start">
+                                        <SearchIcon />
+                                    </InputAdornment>
+                                ),
+                            }}
+                        ></TextField>
+                        {
+                        Object.keys(profiles).length !== 0 ? 
+                            <Stack spacing={2} alignItems="stretch" sx={{ pb: 10 }}>
+                                {profiles}
+                            </Stack>
+                        :
+                            <div
+                                style={{
+                                    display: "flex",
+                                    justifyContent: "center",
+                                }}
+                            >
+                                <Typography> Your search did not match any users.</Typography>
+                                
+                            </div>
+                        }
                         </Stack>
-                    :
-                        <div
-                            style={{
-                                display: "flex",
-                                justifyContent: "center",
-                            }}
-                        >
-                            <Typography> Your search did not match any users.</Typography>
-                            
-                        </div>
-                    }
-                    </Stack>
-                : 
-                    <Stack direction="column" alignItems="stretch">
-                        <div
-                            style={{
-                                display: "flex",
-                                justifyContent: "center",
-                            }}
-                        >
-                            <Typography variant="h5"> You have no matches. Keep swiping!</Typography>
-                            
-                        </div>
-                        <Button sx= {{margin:3 }} variant="outlined" size="large" component={Link} href={`/app/swipe`}>Swipe Page</Button>
-                    </Stack>
-            }
-            </Stack>    
-        </Container>
+                    : 
+                        <Stack direction="column" alignItems="stretch">
+                            <div
+                                style={{
+                                    display: "flex",
+                                    justifyContent: "center",
+                                }}
+                            >
+                                <Typography variant="h5"> You have no matches. Keep swiping!</Typography>
+                                
+                            </div>
+                            <Button sx= {{margin:3 }} variant="outlined" size="large" component={Link} href={`/app/swipe`}>Swipe Page</Button>
+                        </Stack>
+                }
+                </Stack>    
+            </Container>
+        </ReactPullToRefresh>
     );
 
 
