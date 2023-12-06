@@ -12,6 +12,7 @@ import AlertTitle from "@mui/material/AlertTitle"
 import { redirect, useParams } from "next/navigation";
 
 import Link from "~/components/Link";
+import FormStatus from "~/components/FormStatus";
 
 export default function Signup({ searchParams: { error, success } }){
 	const params = useParams();

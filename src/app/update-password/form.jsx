@@ -8,6 +8,7 @@ import TextField from "@mui/material/TextField"
 import Typography from "@mui/material/Typography";
 import Container from "~/components/Container";
 import Stack from "@mui/material/Stack";
+import FormStatus from "~/components/FormStatus";
 
 export default function UpdatePassword({ searchParams: { error, success, message } }){
 	/** @type { import("react").MutableRefObject<HTMLInputElement> } */
@@ -34,9 +35,8 @@ export default function UpdatePassword({ searchParams: { error, success, message
 		action="/api/update-password"
 	>
 		<Typography variant="h1" mb={4}>Update Password</Typography>
-		{
-
-		}
+		{ error && <FormStatus type="error" message={error}/>}
+		{ success && message && <FormStatus type="success" message={message}/>}
 		<Stack direction="column" gap={2}>
 			<Stack direction="column" gap={1}>
 				<TextField variant="outlined" required
@@ -47,18 +47,13 @@ export default function UpdatePassword({ searchParams: { error, success, message
 						minLength: 6,
 					}}
 				/>
-				<FormControl>
-					<TextField variant="outlined" required
-						id="repassword" name="repassword" type="password"
-						label="Re-enter Password"
-						inputProps={{
-							onInput: onRepasswordInput
-						}}
-					/>
-					{error && <FormHelperText error>
-						{error}
-					</FormHelperText>}
-				</FormControl>
+				<TextField variant="outlined" required
+					id="repassword" name="repassword" type="password"
+					label="Re-enter Password"
+					inputProps={{
+						onInput: onRepasswordInput
+					}}
+				/>
 			</Stack>
 			<Button
 				type="submit"
