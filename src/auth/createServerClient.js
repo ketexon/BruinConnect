@@ -6,6 +6,7 @@ import { NextRequest, NextResponse } from "next/server";
  * @typedef {Object} CreateServerClientOptions
  * @property {NextRequest} req
  * @property {NextResponse} res
+ * @property {boolean | undefined} allowWriteCookies
  */
 
 /**
@@ -13,8 +14,10 @@ import { NextRequest, NextResponse } from "next/server";
  * @returns {import("@supabase/supabase-js").SupabaseClient}
  */
 export default function(options){
-	if(options){
-		const { req, res } = options;
+	const req = options?.req
+	const res = options?.res
+	const allowWriteCookies = options?.allowWriteCookies ?? false
+	if(res && req){
 		return createServerClient(
 			process.env.NEXT_PUBLIC_SUPABASE_URL,
 			process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
@@ -27,7 +30,7 @@ export default function(options){
 			}
 		)
 	}
-	else{
+	else {
 		const cookieStore = cookies();
 		return createServerClient(
 			process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -35,8 +38,13 @@ export default function(options){
 			{
 				cookies: {
 					get: name => cookieStore.get(name)?.value,
-					set: (name, value, options) => cookieStore.set({ name, value, ...options }),
-					remove: (name, options) => cookieStore.delete({ name, ...options }),
+					...allowWriteCookies ? {
+						set: (name, value, options) => cookieStore.set({ name, value, ...options }),
+						remove: (name, options) => cookieStore.delete({ name, ...options }),
+					} : {
+						set: () => {},
+						remove: () => {},
+					}
 				}
 			}
 		)

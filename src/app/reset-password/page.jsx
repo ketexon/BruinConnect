@@ -8,11 +8,10 @@ import FormHelperText from "@mui/material/FormHelperText"
 import Typography from "@mui/material/Typography";
 import Container from "~/components/Container";
 import Stack from "@mui/material/Stack";
-import Alert from "@mui/material/Alert"
-import AlertTitle from "@mui/material/AlertTitle"
 
 import { NextResponse } from "next/server";
 import Link from "~/components/Link";
+import FormStatus from "~/components/FormStatus";
 
 export default function ResetPassword({ searchParams: { error, success } }){
 	return <Container
@@ -22,10 +21,8 @@ export default function ResetPassword({ searchParams: { error, success } }){
 		action="/api/reset-password"
 	>
 		<Typography variant="h1" mb={4}>Reset Password</Typography>
-		{success && <Alert color="success" sx={{ mb: 2 }}>
-			<AlertTitle>Success</AlertTitle>
-			Please check your email
-		</Alert>}
+		{ error && <FormStatus type="error" message={error}/>}
+		{ success && <FormStatus type="success" message={"Please check your email."}/>}
 		<Stack direction="column" gap={2}>
 			<Stack direction="column" gap={1}>
 				<FormControl>

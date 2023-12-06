@@ -9,14 +9,22 @@ import { redirect, useParams } from "next/navigation";
 import Typography from "@mui/material/Typography";
 import Container from "~/components/Container";
 import Stack from "@mui/material/Stack";
-import Alert from "@mui/material/Alert"
-import AlertTitle from "@mui/material/AlertTitle"
+import FormStatus from "~/components/FormStatus";
 
 
 import { NextResponse } from "next/server";
 import Link from "~/components/Link";
 
-export default function Login({ searchParams: { error, success, message } }){
+export default function Login({ searchParams: { error } }){
+	const [hashError, setHashError] = React.useState(null);
+
+	React.useEffect(() => {
+		const hashParams = new URLSearchParams(window.location.hash);
+		if(hashParams.has("error")) {
+			setHashError(hashParams.get("error_description") ?? "Unknown external error");
+		}
+	}, [])
+
 	return <Container
 		sx={{ py: 2 }}
 		component="form"
@@ -24,29 +32,22 @@ export default function Login({ searchParams: { error, success, message } }){
 		action="/api/login"
 	>
 		<Typography variant="h1" mb={4}>Login</Typography>
-		{ success && <Alert sx={{ mb: 2 }}>
-			<AlertTitle>Success</AlertTitle>
-			{message}
-		</Alert>}
+		{ error && <FormStatus type="error" message={error}/>}
+		{ hashError && <FormStatus type="error" message={hashError}/>}
 		<Stack direction="column" gap={2}>
 			<Stack direction="column" gap={1}>
 				<TextField variant="outlined" required
 					id="email" name="email" type="email"
 					label="UCLA Email"
 				/>
-				<FormControl>
-					<TextField variant="outlined" required
-						id="password" name="password" type="password"
-						label="Password"
-						inputProps={{
-							minLength: 6,
-						}}
-						sx={{ width: "100%" }}
-					/>
-					{error && <FormHelperText error>
-						{error}
-					</FormHelperText>}
-				</FormControl>
+				<TextField variant="outlined" required
+					id="password" name="password" type="password"
+					label="Password"
+					inputProps={{
+						minLength: 6,
+					}}
+					sx={{ width: "100%" }}
+				/>
 			</Stack>
 			<Button
 				type="submit"

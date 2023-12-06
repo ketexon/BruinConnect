@@ -15,15 +15,15 @@ export async function POST(request) {
 
 	const emailRE = /^[a-zA-Z0-9_!.#$%&*+\/=?^\`\{\|\}~\-]+@(?:g\.)?ucla\.edu$/
 	if(!emailRE.test(email)){
-		return Response.redirect(`${origin}/signup?e=email`);
+		return Response.redirect(`${origin}/signup?error=${encodeURIComponent("Invalid UCLA email")}`);
 	}
 
 	if(password.length < 6){
-		return Response.redirect(`${origin}/signup?e=password`);
+		return Response.redirect(`${origin}/signup?error=${encodeURIComponent("Password must be 6 or more characters")}`);
 	}
 
 	if(password !== repassword){
-		return Response.redirect(`${origin}/signup?e=repassword`);
+		return Response.redirect(`${origin}/signup?error=${encodeURIComponent("Passwords do not match")}`);
 	}
 
 	const { error } = await supabase.auth.signUp({
@@ -35,8 +35,8 @@ export async function POST(request) {
 	});
 
 	if(error){
-		return Response.redirect(`${origin}/signup?e=${error.name}`);
+		return Response.redirect(`${origin}/signup?error=${encodeURIComponent(error.message)}`);
 	}
 
-	return Response.redirect(`${origin}/signup?success`);
+	return Response.redirect(`${origin}/signup?success=true`);
 }

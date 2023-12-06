@@ -13,9 +13,8 @@ import { redirect, useParams } from "next/navigation";
 
 import Link from "~/components/Link";
 
-export default function Signup({ searchParams: { err, success } }){
+export default function Signup({ searchParams: { error, success } }){
 	const params = useParams();
-	const error = params.error;
 
 	/** @type { import("react").MutableRefObject<HTMLInputElement> } */
 	const passwordFieldRef = React.useRef(null);
@@ -55,10 +54,8 @@ export default function Signup({ searchParams: { err, success } }){
 		action="/api/signup"
 	>
 		<Typography variant="h1" mb={4}>Sign Up</Typography>
-		{success==='' && <Alert color="success" sx={{ mb: 2 }}>
-			<AlertTitle>Success</AlertTitle>
-			Please check your email for a verification link
-		</Alert>}
+		{ error && <FormStatus type="error" message={error}/>}
+		{ success && <FormStatus type="success" message="Please check your email"/>}
 		<Stack direction="column" gap={2}>
 			<Stack direction="column" gap={1}>
 				<TextField variant="outlined" required

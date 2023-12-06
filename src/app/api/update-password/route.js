@@ -20,7 +20,7 @@ export async function POST(request) {
 
 	if(password !== repassword){
 		return Response.redirect(
-			`${origin}/signup?e=repassword${encodeURIComponent("Passwords do not match")}`
+			`${origin}/signup?error=${encodeURIComponent("Passwords do not match")}`
 		);
 	}
 

@@ -13,7 +13,7 @@ import { redirect, useParams } from "next/navigation";
 
 import Link from "~/components/Link";
 
-export default function UpdatePassword({ searchParams: { error } }){
+export default function UpdatePassword({ searchParams: { error, success, message } }){
 	/** @type { import("react").MutableRefObject<HTMLInputElement> } */
 	const passwordFieldRef = React.useRef(null);
 
