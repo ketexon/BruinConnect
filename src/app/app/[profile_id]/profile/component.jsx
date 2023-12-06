@@ -36,7 +36,7 @@ function DescriptionEditor({ initial_description, handleSave, readonly }) {
 
 	return (
 		<EditTextarea
-			rows={15}
+			rows={10}
 			readonly={readonly}
 			placeholder={placeholder}
 			defaultValue={initial_description}

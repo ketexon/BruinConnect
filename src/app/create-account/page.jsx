@@ -25,5 +25,6 @@ export default async function CreateAccount(){
 		firstName: user.data.FirstName,
 		lastName: user.data.LastName,
 		snap: user.data.Snap,
+		description: user.data.description
 	} : {}}/>
 }

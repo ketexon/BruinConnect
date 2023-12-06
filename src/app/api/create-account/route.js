@@ -21,8 +21,9 @@ export async function POST(req){
 	const firstName = formData.get("first-name")?.toString();
 	const lastName = formData.get("last-name")?.toString();
 	const snap = formData.get("snap")?.toString();
+	const description = formData.get("description")?.toString();
 
-	if(!firstName || !lastName || !snap){
+	if(!firstName || !lastName || !snap || !description){
 		return error("Required fields missing from form data");
 	}
 
@@ -42,7 +43,8 @@ export async function POST(req){
 		UserUID: user.auth.id,
 		FirstName: firstName,
 		LastName: lastName,
-		Snap: snap
+		Snap: snap,
+		description: description
 	});
 
 	if(postgresError){

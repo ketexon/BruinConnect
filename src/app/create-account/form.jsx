@@ -27,8 +27,8 @@ import UserIcon from "@mui/icons-material/Person"
  * @param {CreateAccountFormProps} param0
  * @returns
  */
-export default function CreateAccountForm({ firstName, lastName, snap, images }){
-	const readonlyForm = firstName && lastName && snap;
+export default function CreateAccountForm({ firstName, lastName, description, snap, images }){
+	const readonlyForm = firstName && lastName && snap && description;
 
 	const supabase = useSupabase();
 
@@ -117,6 +117,14 @@ export default function CreateAccountForm({ firstName, lastName, snap, images })
 				value={readonlyForm ? snap : undefined}
 				name="snap" id="snap"
 				label="Snapchat Username"
+			/>
+			<TextField variant="outlined" required
+				disabled={readonlyForm}
+				value={readonlyForm ? description : undefined}
+				name="description" id="description"
+				label="Description"
+				multiline
+				rows={10}
 			/>
 			<Button type="submit" sx={{ alignSelf: "center" }} disabled={!image}>
 				Submit
