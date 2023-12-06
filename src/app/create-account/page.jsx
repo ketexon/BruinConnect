@@ -6,6 +6,11 @@ import getUser from "~/auth/getUser";
 
 import { redirect } from "next/navigation"
 
+/** @type { import("next").Metadata } */
+export const metadata = {
+    title: 'Create Account | BruinConnect',
+}
+
 export default async function CreateAccount(){
 	const supabase = createServerClient();
 	const user = await getUser(supabase);

@@ -38,7 +38,7 @@ export default function(options){
 			{
 				cookies: {
 					get: name => cookieStore.get(name)?.value,
-					...allowWriteCookies ? {
+					...(allowWriteCookies || true) ? {
 						set: (name, value, options) => cookieStore.set({ name, value, ...options }),
 						remove: (name, options) => cookieStore.delete({ name, ...options }),
 					} : {

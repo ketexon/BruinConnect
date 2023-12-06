@@ -7,7 +7,7 @@ import origin from "~/origin";
  * @returns {import("next/server").NextResponse}
  */
 export async function GET(request) {
-	const supabase = createServerClient();
+	const supabase = createServerClient({ allowWriteCookies: true });
 	await supabase.auth.signOut()
 
 	return Response.redirect(`${origin}/`)

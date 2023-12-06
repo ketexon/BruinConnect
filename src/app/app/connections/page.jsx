@@ -5,8 +5,9 @@ import createServerClient from "~/auth/createServerClient.js";
 import Matches from "./connections"
 import fetchMatches from "./fetchMatches";
 
+/** @type { import("next").Metadata } */
 export const metadata = {
-    title: 'BruinConnect | Matches',
+    title: 'Connections | BruinConnect',
 }
 
 export default async function() {

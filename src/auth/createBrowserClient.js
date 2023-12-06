@@ -17,7 +17,7 @@ export default function(){
 									.find(line => line.startsWith(`${encodeURIComponent(key)}=`))
 									?.substring(key.length + 1)
 									?? null),
-					// removeItem: key => document.cookie = `${encodeURIComponent(key)}=; Max-Age=0`
+					removeItem: key => document.cookie = `${encodeURIComponent(key)}=; Max-Age=0`
 				}
 			}
 		}

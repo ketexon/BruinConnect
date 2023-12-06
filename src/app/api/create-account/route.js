@@ -26,7 +26,7 @@ export async function POST(req){
 		return error("Required fields missing from form data");
 	}
 
-	const supabase = createServerClient();
+	const supabase = createServerClient({ allowWriteCookies: true });
 
 	const user = await getUser(supabase);
 
