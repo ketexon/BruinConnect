@@ -9,8 +9,9 @@ import TextField from "@mui/material/TextField"
 import Matches from "./connections"
 import getOtherUser from "~/auth/getOtherUser";
 
+/** @type { import("next").Metadata } */
 export const metadata = {
-    title: 'BruinConnect | Matches',
+    title: 'Connections | BruinConnect',
 }
 
 export default async function() {

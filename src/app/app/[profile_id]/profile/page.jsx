@@ -4,6 +4,12 @@ import getUser from "~/auth/getUser";
 import createServerClient from "~/auth/createServerClient.js";
 import getOtherUser from "~/auth/getOtherUser.js";
 
+/**
+ * @type {import("next").Metadata}
+ */
+export const metadata = {
+	title: "Profile | BruinConnect"
+}
 
 export default async function ({ params }) {
 	const supabase = createServerClient();

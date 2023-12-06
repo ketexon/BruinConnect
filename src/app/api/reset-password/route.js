@@ -6,7 +6,7 @@ import origin from "~/origin";
  * @returns {import("next/server").NextRequest}
  */
 export async function POST(request){
-	const supabase = createServerClient();
+	const supabase = createServerClient({ allowWriteCookies: true });
 
 	const formData = await request.formData();
 	const email = formData.get("email");

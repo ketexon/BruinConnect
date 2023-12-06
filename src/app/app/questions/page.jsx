@@ -3,6 +3,12 @@ import Questions from "./component.jsx";
 import getUser from "~/auth/getUser";
 import createServerClient from "~/auth/createServerClient.js";
 
+/**
+ * @type {import("next").Metadata}
+ */
+export const metadata = {
+	title: "Questions | BruinConnect"
+}
 
 export default async function QuestionsPage () {
 	const supabase = createServerClient();
