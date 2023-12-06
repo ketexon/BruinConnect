@@ -2,6 +2,8 @@ import createServerClient from "~/auth/createServerClient"
 import { NextResponse } from 'next/server'
 import origin from "~/origin";
 
+import { AuthError } from "@supabase/supabase-js";
+
 export async function GET(request) {
   const requestUrl = new URL(request.url);
   const code = requestUrl.searchParams.get('code');
@@ -9,7 +11,18 @@ export async function GET(request) {
 
   if (code) {
     const supabase = createServerClient({ allowWriteCookies: true });
-    await supabase.auth.exchangeCodeForSession(code);
+    try {
+      await supabase.auth.exchangeCodeForSession(code);
+    }
+    catch(e){
+      const error =
+        encodeURIComponent(
+          e instanceof AuthError
+            ? e.message
+            : "Unknown internal error"
+        )
+      return NextResponse.redirect(`${next}?error=${error}` ?? `${origin}/signup?error=${error}`);
+    }
   }
 
   return NextResponse.redirect(next ?? `${origin}/app`)
