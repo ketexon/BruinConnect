@@ -17,7 +17,7 @@ import SearchIcon from "@mui/icons-material/Search"
 
 import useSupabase from '~/auth/useSupabase';
 import fetchMatches from './fetchMatches';
-import ReactPullToRefresh from 'react-pull-to-refresh';
+import PullToRefresh from 'react-simple-pull-to-refresh';
 
 /**
  *
@@ -53,14 +53,13 @@ export default function Matches({ initialMatchData }) {
     const hasMatches = matchData.length > 0;
     
     const handleRefresh = async () => {
-        console.log(supabase == null);
         if (supabase != null)
             setMatchData(await fetchMatches(supabase));
     }
 
 
     return (
-        <ReactPullToRefresh onRefresh={handleRefresh}>
+        <PullToRefresh onRefresh={handleRefresh}>
             <Container sx={{ pt: 2 }}>
                 <Stack direction="column" alignItems="stretch">
                     <div
@@ -71,7 +70,6 @@ export default function Matches({ initialMatchData }) {
                     >
                         <Typography variant="h1" mb={4}>Your Matches</Typography>
                     </div>
-                    {/* <Button onClick={handleRefresh}>Refresh</Button> */}
                     {
                     hasMatches ?
                         <Stack direction="column" alignItems="stretch">
@@ -121,7 +119,7 @@ export default function Matches({ initialMatchData }) {
                 }
                 </Stack>    
             </Container>
-        </ReactPullToRefresh>
+        </PullToRefresh>
     );
 
 
