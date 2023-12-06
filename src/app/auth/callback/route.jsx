@@ -21,7 +21,7 @@ export async function GET(request) {
             ? e.message
             : "Unknown internal error"
         )
-      return NextResponse.redirect(`${next}?error=${error}` ?? `${origin}/signup?error=${error}`);
+      return NextResponse.redirect(next ? `${next}?error=${error}` : `${origin}/signup?error=${error}`);
     }
   }
 
