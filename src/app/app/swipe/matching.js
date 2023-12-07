@@ -7,22 +7,22 @@ export default async function (user_id) {
 
     try {
 
-        // get number of total questions
-        const { _, count: num_questions } = await supabase.from('Questions').select(
-            '*',
-            { count: 'exact', head: true }
-        );
+        // Wrap each database query in a function
+        const getNumQuestions = () => supabase.from('Questions').select('*', { count: 'exact', head: true });
+        const getUnswipedUsersResponses = () => supabase.from('unswiped_users').select('*');
+        const getUserResponses = () => supabase.from('Responses').select('*').eq('user_id', user_id);
 
-        // get responses from unswiped users
-        const { data: responses } = await supabase.from('unswiped_users').select(`
-            *,
-            Responses(question_id, response)
-        `);
+        // Use Promise.all to execute all queries simultaneously
+        const [numQuestionsResult, unswipedUsersResult, userResponsesResult] = await Promise.all([
+            getNumQuestions(),
+            getUnswipedUsersResponses(),
+            getUserResponses()
+        ]);
 
-        // get response for current user
-        const { data: user_responses} = await supabase.from('Responses').select(`
-            *
-        `).eq('user_id', user_id);
+        // Destructure results
+        const { _, count: num_questions } = numQuestionsResult;
+        const { data: responses } = unswipedUsersResult;
+        const { data: user_responses } = userResponsesResult;
 
         // add user responses to list of all users we're interested in
         responses.push({'UserUID': user_id, 'Responses': user_responses})
@@ -32,8 +32,9 @@ export default async function (user_id) {
 
             // each user's vector
             let curr_vector = new Array(num_questions).fill(0);
-            for (const response of Object.values(curr_user.Responses))
-                curr_vector[response.question_id-1] = response.response; // question ids start at 1
+            if (curr_user.responses != null)
+                for (const response of Object.values(curr_user.Responses))
+                    curr_vector[response.question_id-1] = response.response; // question ids start at 1
         
             // add vector to accumulator
             acc[curr_user.UserUID] = curr_vector;
@@ -52,6 +53,7 @@ export default async function (user_id) {
             })
             .sort(([, similarityA], [, similarityB]) => similarityB - similarityA)
             .map(([user_id, _]) => user_id);
+
         return similar_users;
 
     } catch (error) {
