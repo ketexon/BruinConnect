@@ -1,6 +1,12 @@
 # Bruin Connect
 
+## Presentation
+
+The presentation slides are available through [Google Slides](https://docs.google.com/presentation/d/16VHa4A1y5fcjZ7NbaQo8vm0tNecAukiU7T1aRRgrepg/edit?usp=sharing)
+
 ## Software used
+
+The main tech stack is:
 
 - NodeJS 21 with yarn
 - NextJS 13 using the **app router**
@@ -8,7 +14,13 @@
 - React
 - Material UI and Emotion CSS
 
-Other libraries can be viewed in the `package.json`.
+Other third-party libraries used (from `package.json`):
+
+- compute-cosine-similarity
+- react-edit-text
+- react-simple-pull-to-refresh
+- react-transition-group
+- server-only
 
 ## Configuration
 
