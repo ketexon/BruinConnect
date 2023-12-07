@@ -13,13 +13,23 @@ import React from "react";
 import HomeBackground from "./HomeBackground";
 import HomeCarousel from "./HomeCarousel";
 
+import Snackbar from "@mui/material/Snackbar"
+import Alert from "@mui/material/Alert"
+
 /**
  * @param {{ loggedIn: bool }} param0
  * @returns {React.ReactNode}
  */
 
-export default function Home({ loggedIn }){
+export default function Home({ loggedIn, searchParams: { error, error_description } }){
+	const [snackbarOpen, setSnackbarOpen] = React.useState(false);
+	const onSnackbarClose = () => setSnackbarOpen(false)
 
+	React.useEffect(() => {
+		if(error){
+			setSnackbarOpen(true);
+		}
+	}, [error])
 
 	return <Container sx={(theme) => ({
 		minHeight: "100vh",
@@ -30,6 +40,10 @@ export default function Home({ loggedIn }){
 		flexDirection: "column",
 		gap: 4
 	})}>
+		<Snackbar open={snackbarOpen} onClose={onSnackbarClose} autoHideDuration={10000}>
+			{ error && <Alert severity="error" onClose={onSnackbarClose} sx={{ width: "100%" }}>{error_description}</Alert> }
+		</Snackbar>
+
 		<TitleGradient/>
 		<HomeBackground/>
 		<HomeCarousel/>

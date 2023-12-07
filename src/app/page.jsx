@@ -8,9 +8,9 @@ export const metadata = {
 	title: "BruinConnect",
 }
 
-export default async function (){
+export default async function (props){
 	const supabase = createServerClient();
 	const user = await getUser(supabase);
 
-	return <Home loggedIn={user !== null} />
+	return <Home loggedIn={user !== null} {...props} />
 }
