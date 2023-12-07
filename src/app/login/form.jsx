@@ -19,7 +19,7 @@ export default function Login({ searchParams: { error, success, message } }){
 	const [hashError, setHashError] = React.useState(null);
 
 	React.useEffect(() => {
-		const hashParams = new URLSearchParams(window.location.hash);
+		const hashParams = new URLSearchParams(window.location.hash.substring(1));
 		if(hashParams.has("error")) {
 			setHashError(hashParams.get("error_description") ?? "Unknown external error");
 		}
