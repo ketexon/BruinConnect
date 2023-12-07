@@ -11,6 +11,7 @@ import ImageUpload from '~/components/ImageUpload'
 
 import useSupabase from '~/auth/useSupabase';
 import Container from '~/components/Container';
+import { WrapText } from '@mui/icons-material';
 
 // export const metadata = {
 //     title: 'BruinConnect | Profile',
@@ -45,7 +46,8 @@ function DescriptionEditor({ initial_description, handleSave, readonly }) {
 				width: 300,
 				overflow: "hidden",
 				fontSize: "1rem",
-				backgroundColor: readonly ? "transparent" : ""
+				backgroundColor: readonly ? "transparent" : "",
+				overflowWrap: 'break-word'
 			}}
 		/>
 	);
