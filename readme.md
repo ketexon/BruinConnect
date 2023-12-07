@@ -2,7 +2,9 @@
 
 ## Presentation
 
-The presentation slides are available through [Google Slides](https://docs.google.com/presentation/d/16VHa4A1y5fcjZ7NbaQo8vm0tNecAukiU7T1aRRgrepg/edit?usp=sharing)
+The presentation slides are available through [Google Slides](https://docs.google.com/presentation/d/16VHa4A1y5fcjZ7NbaQo8vm0tNecAukiU7T1aRRgrepg/).
+
+A copy is also included in PDF format.
 
 ## Software used
 
